@@ -1,0 +1,310 @@
+{
+  "_note": "Micro-lesson cards in simple English (CEFR A2-B1). 'examples' holds one everyday example per region; the tutor translates and adapts them. Practice answers are checked in code, never by the model.",
+  "regions": ["southeast_asia", "south_asia", "africa", "latin_america", "global"],
+  "lessons": [
+    {
+      "id": "fractions", "subject": "math", "level": "upper primary", "title": "Fractions",
+      "aliases": ["fraction", "numerator", "denominator", "adding fractions", "pecahan"],
+      "key_idea": "A fraction shows equal parts of a whole. The bottom number (denominator) says how many equal parts the whole is cut into. The top number (numerator) says how many of those parts you have.",
+      "formula": "a/b + c/d = (a*d + c*b) / (b*d)",
+      "worked_example": "1/2 + 1/4: first make the bottom numbers the same. 1/2 = 2/4. Then 2/4 + 1/4 = 3/4.",
+      "misconception": "Do not add the tops and the bottoms: 1/2 + 1/4 is NOT 2/6. The parts must be the same size before you add them.",
+      "examples": {
+        "southeast_asia": "A durian has 5 sections. If you eat 2 sections, you have eaten 2/5 of the durian.",
+        "south_asia": "Tear a chapati into 4 equal pieces. Eating 3 pieces means you ate 3/4 of the chapati.",
+        "africa": "A loaf of bread is cut into 8 slices and shared by 4 friends. Each friend gets 2/8 = 1/4 of the loaf.",
+        "latin_america": "A tortilla is cut into 6 equal pieces. Taking 2 pieces is 2/6 = 1/3 of the tortilla.",
+        "global": "A pizza is cut into 8 slices. 3 slices is 3/8 of the pizza."
+      },
+      "terms": ["fraction"],
+      "practice": [
+        {"id": "fractions-1", "type": "number", "question": "Siti has 3/4 of a cake. She gives away 1/4 of the whole cake. What fraction of the cake does she have left?", "answer": 0.5, "hint": "Both fractions have the same bottom number, so just subtract the top numbers.", "solution": "3/4 - 1/4 = 2/4 = 1/2."},
+        {"id": "fractions-2", "type": "number", "question": "What is 1/3 + 1/6?", "answer": 0.5, "hint": "Change 1/3 into sixths first.", "solution": "1/3 = 2/6. Then 2/6 + 1/6 = 3/6 = 1/2."},
+        {"id": "fractions-3", "type": "number", "question": "A farmer plants 2/5 of a field with rice and 1/5 with vegetables. What fraction of the field is planted?", "answer": 0.6, "hint": "Same bottom number: add the top numbers.", "solution": "2/5 + 1/5 = 3/5."}
+      ]
+    },
+    {
+      "id": "percentages", "subject": "math", "level": "lower secondary", "title": "Percentages",
+      "aliases": ["percent", "percentage", "discount", "percentage change", "peratus", "persen"],
+      "key_idea": "Percent means 'out of 100'. To find a percentage of an amount, change the percent into a decimal (divide by 100) and multiply.",
+      "formula": "x% of A = (x / 100) * A ; percentage change = (new - old) / old * 100",
+      "worked_example": "20% of 150 = 0.20 * 150 = 30.",
+      "misconception": "A 50% increase and then a 50% decrease does NOT bring you back to the start: 100 -> 150 -> 75.",
+      "examples": {
+        "southeast_asia": "A night-market seller gives 10% off a bag of rice that costs 20. You save 2 and pay 18.",
+        "south_asia": "30% of the 200 mango trees in a village orchard are flowering: 0.30 * 200 = 60 trees.",
+        "africa": "A mobile-money agent charges a 2% fee to send 500. The fee is 0.02 * 500 = 10.",
+        "latin_america": "25% of the 40 students in a class walk to school: 0.25 * 40 = 10 students.",
+        "global": "A phone battery at 40% of 4000 mAh holds 0.40 * 4000 = 1600 mAh."
+      },
+      "terms": ["percentage", "fraction"],
+      "practice": [
+        {"id": "percentages-1", "type": "number", "question": "What is 15% of 200?", "answer": 30, "hint": "15% = 0.15. Multiply 0.15 by 200.", "solution": "0.15 * 200 = 30."},
+        {"id": "percentages-2", "type": "number", "question": "A bag of fertiliser costs 80. The price goes up by 25%. What is the new price?", "answer": 100, "hint": "First find 25% of 80, then add it to 80.", "solution": "25% of 80 = 20. 80 + 20 = 100."},
+        {"id": "percentages-3", "type": "number", "question": "In a class of 40 students, 18 are girls. What percentage of the class are girls?", "answer": 45, "hint": "Divide 18 by 40, then multiply by 100.", "solution": "18 / 40 = 0.45 = 45%."}
+      ]
+    },
+    {
+      "id": "linear_equations", "subject": "math", "level": "lower secondary", "title": "Solving linear equations",
+      "aliases": ["equation", "equations", "algebra", "solve for x", "linear equation", "persamaan linear"],
+      "key_idea": "An equation is like a balanced scale. Whatever you do to one side, do the same to the other side, until the unknown (x) is alone.",
+      "formula": "a*x + b = c  ->  x = (c - b) / a",
+      "worked_example": "2x + 3 = 11. Subtract 3 from both sides: 2x = 8. Divide both sides by 2: x = 4. Check: 2*4 + 3 = 11. Correct!",
+      "misconception": "When a number moves across the '=' its operation changes: from 2x + 3 = 11 you get 2x = 11 - 3, not 2x = 11 + 3.",
+      "examples": {
+        "southeast_asia": "You buy 3 kuih at the same price and pay 1 for a drink. You pay 4 in total, so 3x + 1 = 4 and each kuih costs 1.",
+        "south_asia": "An auto-rickshaw charges 20 to start plus 10 per km. A ride cost 70, so 10x + 20 = 70 and x = 5 km.",
+        "africa": "A boda-boda rider charges 50 to start plus 20 per km. A trip cost 150, so 20x + 50 = 150 and x = 5 km.",
+        "latin_america": "A taxi charges 5 to start plus 2 per km. A trip cost 21, so 2x + 5 = 21 and x = 8 km.",
+        "global": "A phone plan costs 10 a month plus 2 per GB. The bill is 18, so 2x + 10 = 18 and x = 4 GB."
+      },
+      "terms": ["equation", "variable"],
+      "practice": [
+        {"id": "linear_equations-1", "type": "number", "question": "Solve: 3x + 5 = 20", "answer": 5, "hint": "Subtract 5 from both sides first.", "solution": "3x = 15, so x = 5."},
+        {"id": "linear_equations-2", "type": "number", "question": "Solve: 4x - 7 = 21", "answer": 7, "hint": "Add 7 to both sides first.", "solution": "4x = 28, so x = 7."},
+        {"id": "linear_equations-3", "type": "number", "question": "A motorbike taxi charges 3 to start plus 2 per km. A ride costs 15. How many km was the ride?", "answer": 6, "hint": "Write it as 2x + 3 = 15.", "solution": "2x + 3 = 15, so 2x = 12 and x = 6 km."}
+      ]
+    },
+    {
+      "id": "area_perimeter", "subject": "math", "level": "upper primary", "title": "Area and perimeter",
+      "aliases": ["area", "perimeter", "rectangle", "triangle area", "luas", "perimeter dan luas"],
+      "key_idea": "Perimeter is the distance around a shape: add all the sides. Area is the space inside a shape: how many unit squares cover it.",
+      "formula": "Rectangle: perimeter = 2 * (length + width), area = length * width. Triangle: area = 1/2 * base * height.",
+      "worked_example": "A rectangular plot is 8 m by 5 m. Perimeter = 2 * (8 + 5) = 26 m. Area = 8 * 5 = 40 m².",
+      "misconception": "Area and perimeter are different things. Two shapes can have the same perimeter but different areas.",
+      "examples": {
+        "southeast_asia": "To fence a rectangular vegetable plot you need its perimeter. To know how much seed to plant you need its area.",
+        "south_asia": "To put a border around a rangoli you need its perimeter. To fill it with colour powder you need its area.",
+        "africa": "To build a fence around a goat pen you need the perimeter. To know how much grass grows inside you need the area.",
+        "latin_america": "To tile a kitchen floor you need the area. To put a strip along the bottom of the walls you need the perimeter.",
+        "global": "A photo frame goes around the perimeter. The glass covers the area."
+      },
+      "terms": ["area", "perimeter"],
+      "practice": [
+        {"id": "area_perimeter-1", "type": "number", "question": "A rectangular rice field is 12 m long and 7 m wide. What is its area in m²?", "answer": 84, "hint": "Area of a rectangle = length * width.", "solution": "12 * 7 = 84 m²."},
+        {"id": "area_perimeter-2", "type": "number", "question": "How many metres of fence are needed to go around a rectangular garden 9 m long and 4 m wide?", "answer": 26, "hint": "Perimeter = 2 * (length + width).", "solution": "2 * (9 + 4) = 26 m."},
+        {"id": "area_perimeter-3", "type": "number", "question": "A triangular piece of cloth has a base of 10 cm and a height of 6 cm. What is its area in cm²?", "answer": 30, "hint": "Area of a triangle = 1/2 * base * height.", "solution": "1/2 * 10 * 6 = 30 cm²."}
+      ]
+    },
+    {
+      "id": "probability", "subject": "math", "level": "lower secondary", "title": "Probability",
+      "aliases": ["chance", "likelihood", "probability", "kebarangkalian", "peluang"],
+      "key_idea": "Probability measures how likely something is. It is the number of ways it can happen divided by the total number of equally likely outcomes. It is always between 0 and 1.",
+      "formula": "P(event) = favourable outcomes / total outcomes",
+      "worked_example": "A bag has 3 red and 5 blue marbles. P(red) = 3 / 8 = 0.375.",
+      "misconception": "After 4 heads in a row, tails is NOT 'due'. Each toss of a fair coin is still 1/2.",
+      "examples": {
+        "southeast_asia": "If it rained on 18 of the last 30 days of the monsoon, the estimated probability of rain tomorrow is 18/30 = 0.6.",
+        "south_asia": "A box has 20 mangoes and 4 are unripe. If you pick one without looking, P(unripe) = 4/20 = 0.2.",
+        "africa": "A farmer's records show 45 of 50 maize seeds grew. P(a seed grows) is about 45/50 = 0.9.",
+        "latin_america": "A football team won 12 of its last 20 matches, so its estimated chance of winning the next one is 12/20 = 0.6.",
+        "global": "When you roll a fair die, P(6) = 1/6."
+      },
+      "terms": ["probability", "fraction"],
+      "practice": [
+        {"id": "probability-1", "type": "number", "question": "A bag has 4 red balls and 6 green balls. What is the probability of picking a red ball?", "answer": 0.4, "hint": "Red balls / total balls.", "solution": "4 / 10 = 2/5 = 0.4."},
+        {"id": "probability-2", "type": "number", "question": "A fair die is rolled. What is the probability of getting an even number?", "answer": 0.5, "hint": "The even numbers are 2, 4 and 6.", "solution": "3 / 6 = 1/2."},
+        {"id": "probability-3", "type": "number", "question": "Out of 50 seeds, 40 grew. Estimate the probability that a seed grows.", "answer": 0.8, "hint": "Seeds that grew / total seeds.", "solution": "40 / 50 = 0.8."}
+      ]
+    },
+    {
+      "id": "speed_velocity", "subject": "physics", "level": "lower secondary", "title": "Speed, velocity and acceleration",
+      "aliases": ["speed", "velocity", "acceleration", "motion", "kinematics", "laju", "halaju", "pecutan"],
+      "key_idea": "Speed tells how fast something moves: distance travelled per unit of time. Velocity is speed in a given direction. Acceleration is how quickly the velocity changes.",
+      "formula": "speed = distance / time ; acceleration = (final velocity - initial velocity) / time",
+      "worked_example": "A bus travels 120 km in 2 hours. Speed = 120 / 2 = 60 km/h.",
+      "misconception": "Heavy objects do not fall faster than light ones (if we ignore air). Both speed up at about 9.8 m/s² every second.",
+      "examples": {
+        "southeast_asia": "A motorbike goes 30 km from the village to town in half an hour (0.5 h). Speed = 30 / 0.5 = 60 km/h.",
+        "south_asia": "A train covers 300 km in 5 hours. Average speed = 300 / 5 = 60 km/h.",
+        "africa": "A runner finishes 10,000 m in 30 minutes (1800 s). Average speed = 10000 / 1800, about 5.6 m/s.",
+        "latin_america": "A bicycle courier rides 15 km in 45 minutes (0.75 h). Speed = 15 / 0.75 = 20 km/h.",
+        "global": "Sound travels about 340 m every second in air."
+      },
+      "terms": ["speed", "velocity", "acceleration"],
+      "practice": [
+        {"id": "speed_velocity-1", "type": "number", "question": "A bicycle travels 18 km in 1.5 hours. What is its average speed in km/h?", "answer": 12, "hint": "speed = distance / time.", "solution": "18 / 1.5 = 12 km/h."},
+        {"id": "speed_velocity-2", "type": "number", "question": "A car speeds up from 0 m/s to 20 m/s in 5 seconds. What is its acceleration in m/s²?", "answer": 4, "hint": "acceleration = change in velocity / time.", "solution": "(20 - 0) / 5 = 4 m/s²."},
+        {"id": "speed_velocity-3", "type": "number", "question": "You walk at 1.5 m/s. How many seconds does it take to walk 300 m?", "answer": 200, "hint": "time = distance / speed.", "solution": "300 / 1.5 = 200 s."}
+      ]
+    },
+    {
+      "id": "electricity", "subject": "physics", "level": "lower secondary", "title": "Electricity and Ohm's law",
+      "aliases": ["ohm's law", "ohms law", "current", "voltage", "resistance", "circuit", "electric power", "elektrik", "listrik"],
+      "key_idea": "In a circuit, the voltage (V) pushes a current (I) through a resistance (R). More voltage gives more current. More resistance gives less current.",
+      "formula": "V = I * R ; power P = V * I",
+      "worked_example": "A 12 V battery is connected to a 4 ohm resistor. I = V / R = 12 / 4 = 3 A.",
+      "misconception": "A bulb does not 'use up' current. The same current flows in and out of the bulb; what it uses is energy.",
+      "examples": {
+        "southeast_asia": "A 12 V battery charged by a solar panel lights LED lamps in a rural home after dark.",
+        "south_asia": "During a power cut, a 12 V inverter battery runs a fan. The fan's resistance decides how much current it takes.",
+        "africa": "A small solar kit charges a phone through a USB cable at 5 V.",
+        "latin_america": "An electric shower heater has a low resistance, so a big current flows and heats the water quickly.",
+        "global": "Think of voltage as water pressure, current as the flow of water, and resistance as a narrow pipe."
+      },
+      "terms": ["electric current", "voltage", "resistance", "circuit"],
+      "practice": [
+        {"id": "electricity-1", "type": "number", "question": "A 9 V battery is connected to an 18 ohm resistor. What is the current in amperes (A)?", "answer": 0.5, "hint": "I = V / R.", "solution": "9 / 18 = 0.5 A."},
+        {"id": "electricity-2", "type": "number", "question": "A current of 2 A flows through a 6 ohm resistor. What is the voltage across it in volts?", "answer": 12, "hint": "V = I * R.", "solution": "2 * 6 = 12 V."},
+        {"id": "electricity-3", "type": "number", "question": "A 5 V phone charger gives a current of 2 A. What is the power in watts?", "answer": 10, "hint": "P = V * I.", "solution": "5 * 2 = 10 W."}
+      ]
+    },
+    {
+      "id": "density", "subject": "physics", "level": "lower secondary", "title": "Density: why things float or sink",
+      "aliases": ["density", "float", "sink", "floating", "ketumpatan", "massa jenis"],
+      "key_idea": "Density tells how tightly matter is packed. Things with a density less than water (1 g/cm³) float. Things with a density more than water sink.",
+      "formula": "density = mass / volume",
+      "worked_example": "A stone has a mass of 60 g and a volume of 20 cm³. Density = 60 / 20 = 3 g/cm³, which is more than water, so it sinks.",
+      "misconception": "Big things do not always sink. A huge wooden log floats because wood is less dense than water.",
+      "examples": {
+        "southeast_asia": "Cooking oil floats on top of water in a wok because oil is less dense than water.",
+        "south_asia": "Coconut oil floats on water, but a coin sinks.",
+        "africa": "Wooden fishing boats float on the lake because wood is less dense than water.",
+        "latin_america": "Ice cubes float in a glass of water because ice is less dense than liquid water.",
+        "global": "A fresh egg sinks in water but an old egg floats, because the old egg has a bigger air pocket inside."
+      },
+      "terms": ["density", "mass"],
+      "practice": [
+        {"id": "density-1", "type": "number", "question": "A block of wood has a mass of 300 g and a volume of 500 cm³. What is its density in g/cm³?", "answer": 0.6, "hint": "density = mass / volume.", "solution": "300 / 500 = 0.6 g/cm³."},
+        {"id": "density-2", "type": "text", "question": "A block has a density of 0.6 g/cm³. Water has a density of 1 g/cm³. Will the block float or sink?",
+          "accepts": ["float", "terapung", "timbul", "apung", "浮", "மிதக்", "तैर", "kuelea", "elea", "nổi", "noi", "lulutang", "lutang", "flota", "flotar"],
+          "rejects": ["sink", "tenggelam", "沉", "மூழ்க", "डूब", "zama", "chìm", "chim", "lubog"],
+          "hint": "Compare the block's density with the density of water.", "solution": "0.6 is less than 1, so the block floats."},
+        {"id": "density-3", "type": "number", "question": "A stone has a mass of 150 g and a volume of 50 cm³. What is its density in g/cm³?", "answer": 3, "hint": "density = mass / volume.", "solution": "150 / 50 = 3 g/cm³."}
+      ]
+    },
+    {
+      "id": "photosynthesis", "subject": "biology", "level": "lower secondary", "title": "Photosynthesis",
+      "aliases": ["photosynthesis", "how plants make food", "chlorophyll", "fotosintesis"],
+      "key_idea": "Green plants make their own food. Chlorophyll in the leaves traps sunlight and uses its energy to turn carbon dioxide and water into glucose (a sugar). Oxygen is given out.",
+      "formula": "carbon dioxide + water --(sunlight, chlorophyll)--> glucose + oxygen ; 6CO2 + 6H2O -> C6H12O6 + 6O2",
+      "worked_example": "A plant kept in a dark cupboard for a week becomes pale and weak, because without light it cannot photosynthesise.",
+      "misconception": "Plants do not get their food from the soil. Soil gives water and minerals; most of a plant's mass comes from carbon dioxide in the air.",
+      "examples": {
+        "southeast_asia": "Rice paddies need lots of sunlight and water, two of the key ingredients of photosynthesis. The third, carbon dioxide, comes from the air.",
+        "south_asia": "Farmers plant wheat in rows with space between them so every leaf gets sunlight.",
+        "africa": "Maize grows tall with broad leaves to catch as much sunlight as possible.",
+        "latin_america": "The trees of the Amazon rainforest take in huge amounts of carbon dioxide through photosynthesis.",
+        "global": "Water plants in a fish tank give off tiny bubbles of oxygen in bright light."
+      },
+      "terms": ["photosynthesis", "chloroplast", "cell"],
+      "practice": [
+        {"id": "photosynthesis-1", "type": "text", "question": "Which gas do plants give out during photosynthesis?",
+          "accepts": ["oxygen", "o2", "oksigen", "氧", "ஆக்ஸிஜன்", "ஆக்சிஜன்", "ஒட்சிசன்", "ऑक्सीजन", "oksijeni", "oxi", "oxy", "oxigeno", "oksiheno"],
+          "rejects": ["carbon", "karbon", "co2", "二氧化碳", "कार्बन", "kaboni", "cacbon"],
+          "hint": "It is the gas we need to breathe.", "solution": "Oxygen (O2)."},
+        {"id": "photosynthesis-2", "type": "number", "question": "In 6CO2 + 6H2O -> C6H12O6 + 6O2, how many molecules of carbon dioxide are used to make one molecule of glucose?", "answer": 6, "hint": "Look at the number in front of CO2.", "solution": "6 molecules of CO2."}
+      ]
+    },
+    {
+      "id": "cells", "subject": "biology", "level": "lower secondary", "title": "Cells and the microscope",
+      "aliases": ["cell", "plant cell", "animal cell", "nucleus", "microscope", "magnification", "sel"],
+      "key_idea": "All living things are made of cells. Plant and animal cells both have a nucleus (the control centre), cytoplasm and a cell membrane. Plant cells also have a cell wall, chloroplasts and a large vacuole.",
+      "formula": "magnification = image size / actual size",
+      "worked_example": "Under a microscope at 300x, a cell looks 30 mm wide. Actual size = 30 / 300 = 0.1 mm.",
+      "misconception": "Cells are not all the same. A nerve cell can be longer than 1 m, and a red blood cell has no nucleus.",
+      "examples": {
+        "southeast_asia": "Thin onion skin under a microscope shows brick-shaped plant cells with clear cell walls.",
+        "south_asia": "Curd (yoghurt) is made by bacteria, which are tiny living things made of just one cell.",
+        "africa": "Yeast is made of single cells. It makes bread dough rise and is used to make traditional fermented drinks.",
+        "latin_america": "Cactus cells store water in large vacuoles to survive the dry season.",
+        "global": "Your body is made of about 30 trillion cells."
+      },
+      "terms": ["cell", "chloroplast"],
+      "practice": [
+        {"id": "cells-1", "type": "number", "question": "At 400x magnification, a cell's image is 20 mm wide. What is its actual width in mm?", "answer": 0.05, "hint": "actual size = image size / magnification.", "solution": "20 / 400 = 0.05 mm."},
+        {"id": "cells-2", "type": "text", "question": "Which part of a plant cell carries out photosynthesis?",
+          "accepts": ["chloroplast", "kloroplas", "叶绿体", "葉綠體", "பசுங்கணிக", "हरितलवक", "हरित लवक", "kloroplasti", "luc lap", "cloroplasto"],
+          "rejects": ["nucleus", "nukleus", "细胞核", "vacuole"],
+          "hint": "It is green and contains chlorophyll.", "solution": "The chloroplast."},
+        {"id": "cells-3", "type": "number", "question": "A cell is 0.02 mm wide. Its image is 10 mm wide. What is the magnification?", "answer": 500, "hint": "magnification = image size / actual size.", "solution": "10 / 0.02 = 500, so 500x."}
+      ]
+    },
+    {
+      "id": "acids_bases", "subject": "chemistry", "level": "lower secondary", "title": "Acids, alkalis and pH",
+      "aliases": ["acid", "alkali", "base", "ph", "neutralisation", "neutralization", "asid", "asam", "basa"],
+      "key_idea": "The pH scale (0 to 14) shows how acidic or alkaline a solution is. pH below 7 is acidic, pH 7 is neutral, and pH above 7 is alkaline. Acid + alkali gives salt + water: this is neutralisation.",
+      "formula": "acid + alkali -> salt + water ; HCl + NaOH -> NaCl + H2O",
+      "worked_example": "Indigestion is caused by too much stomach acid. An antacid tablet (a weak base) neutralises the extra acid.",
+      "misconception": "Not all acids are dangerous. The citric acid in limes and the acid in vinegar are safe to eat in small amounts.",
+      "examples": {
+        "southeast_asia": "Tamarind and calamansi juice taste sour because they are acidic.",
+        "south_asia": "Turmeric is a natural indicator: it turns red-brown in soapy (alkaline) water.",
+        "africa": "Farmers spread agricultural lime on acidic soil to raise its pH so crops like maize grow better.",
+        "latin_america": "The lime juice in ceviche is acidic enough to change the proteins in the fish.",
+        "global": "Red cabbage juice is a natural indicator: it turns pink in acid and green-yellow in alkali."
+      },
+      "terms": ["acid", "alkali"],
+      "practice": [
+        {"id": "acids_bases-1", "type": "text", "question": "A solution has pH 3. Is it acidic, neutral or alkaline?",
+          "accepts": ["acid", "asid", "asam", "酸", "அமில", "अम्ल", "asidi", "axit", "acido", "asido"],
+          "rejects": ["alkal", "neutral", "basa", "碱", "中性", "கார", "क्षार", "bazo", "base", "neutr", "netral", "trung tinh", "उदासीन"],
+          "hint": "pH below 7 is ...?", "solution": "Acidic, because 3 is below 7."},
+        {"id": "acids_bases-2", "type": "number", "question": "Pure water is neutral. What is its pH?", "answer": 7, "hint": "Neutral is the middle of the 0-14 scale.", "solution": "pH 7."}
+      ]
+    },
+    {
+      "id": "algorithms", "subject": "computing", "level": "lower secondary", "title": "Algorithms",
+      "aliases": ["algorithm", "pseudocode", "flowchart", "sequence selection repetition", "computational thinking", "algoritma"],
+      "key_idea": "An algorithm is a precise, step-by-step list of instructions that solves a problem. It is built from three ideas: sequence (steps in order), selection (IF ... THEN ... ELSE) and repetition (loops).",
+      "formula": "sequence + selection + repetition",
+      "worked_example": "Find the biggest number in a list: 1) Let biggest = the first number. 2) For each other number: IF number > biggest THEN biggest = number. 3) Output biggest.",
+      "misconception": "Algorithms are not only for computers. A recipe, directions to a friend's house, and long division are all algorithms.",
+      "examples": {
+        "southeast_asia": "Cooking nasi lemak: wash the rice, add coconut milk, cook it, then serve with sambal. The order matters!",
+        "south_asia": "Making chai: boil water, add tea leaves, add milk and sugar, boil again, then strain. That is a sequence.",
+        "africa": "Sending mobile money: dial the code, choose 'send', enter the number, enter the amount, confirm with your PIN.",
+        "latin_america": "Making arepas: mix flour, water and salt, knead, shape, then cook each side. Repeat for each arepa: a loop!",
+        "global": "Looking up a word in a dictionary: open it in the middle, go left or right, repeat. This is called binary search."
+      },
+      "terms": ["algorithm", "loop"],
+      "practice": [
+        {"id": "algorithms-1", "type": "number", "question": "Start with x = 2. Repeat 3 times: x = x * 2. What is x at the end?", "answer": 16, "hint": "Write down x after each repeat: 4, then ...", "solution": "2 -> 4 -> 8 -> 16."},
+        {"id": "algorithms-2", "type": "number", "question": "total = 0. For each number in [4, 7, 1, 8]: total = total + number. What is total at the end?", "answer": 20, "hint": "Add the numbers one at a time.", "solution": "4 + 7 + 1 + 8 = 20."},
+        {"id": "algorithms-3", "type": "number", "question": "Linear search checks a list one item at a time. In the worst case, how many checks are needed to find a name in a list of 50 names?", "answer": 50, "hint": "Worst case: the name is the last one, or not there at all.", "solution": "50 checks."}
+      ]
+    },
+    {
+      "id": "programming_basics", "subject": "computing", "level": "lower secondary", "title": "Variables and loops in programming",
+      "aliases": ["programming", "coding", "python", "variable", "loop", "for loop", "range", "pengaturcaraan", "pemrograman"],
+      "key_idea": "A variable is a named box that stores a value, and its value can change. A loop repeats instructions so you do not have to write them again and again.",
+      "formula": "for i in range(5): print(i)   # prints 0, 1, 2, 3, 4",
+      "worked_example": "count = 0, then repeat 5 times: count = count + 2. At the end count is 10.",
+      "misconception": "In Python, range(5) gives 0, 1, 2, 3, 4. It starts at 0 and stops BEFORE 5.",
+      "examples": {
+        "southeast_asia": "Counting harvested coconuts is a loop: for each coconut, add 1 to the variable 'count'.",
+        "south_asia": "A cricket scoreboard keeps a variable 'runs' that is updated after every ball.",
+        "africa": "A savings group adds each member's weekly payment to a variable 'total', one member at a time: a loop.",
+        "latin_america": "A shop's cash register adds the price of each item to the total, one item at a time: a loop.",
+        "global": "A phone alarm that rings every morning at 6 am is a loop."
+      },
+      "terms": ["variable", "loop", "algorithm"],
+      "practice": [
+        {"id": "programming_basics-1", "type": "number", "question": "What does this Python code print?\ntotal = 0\nfor i in range(1, 5):\n    total = total + i\nprint(total)", "answer": 10, "hint": "range(1, 5) gives 1, 2, 3, 4.", "solution": "1 + 2 + 3 + 4 = 10."},
+        {"id": "programming_basics-2", "type": "number", "question": "How many times does this print 'Hello'?\nfor i in range(3):\n    print('Hello')", "answer": 3, "hint": "range(3) gives 0, 1, 2.", "solution": "3 times."},
+        {"id": "programming_basics-3", "type": "number", "question": "x = 10, then x = x - 3, then x = x * 2. What is x?", "answer": 14, "hint": "Do one line at a time.", "solution": "10 - 3 = 7, then 7 * 2 = 14."}
+      ]
+    },
+    {
+      "id": "binary_numbers", "subject": "computing", "level": "lower secondary", "title": "Binary numbers",
+      "aliases": ["binary", "bits", "bytes", "base 2", "number systems", "binari", "biner", "perduaan"],
+      "key_idea": "Computers store everything using two states: 0 (off) and 1 (on). In binary, each place value is double the one to its right: 1, 2, 4, 8, 16, and so on.",
+      "formula": "1011 (binary) = 1*8 + 0*4 + 1*2 + 1*1 = 11",
+      "worked_example": "Convert 13 to binary: 13 = 8 + 4 + 1, so 13 = 1101 in binary.",
+      "misconception": "Binary 10 is not ten. It means one 2 and zero 1s, which is 2.",
+      "examples": {
+        "southeast_asia": "A row of 4 on/off lights on a shop sign can show 16 different patterns: 2 * 2 * 2 * 2.",
+        "south_asia": "Each tiny dot (pixel) of a phone photo is stored as binary numbers for its red, green and blue colours.",
+        "africa": "A text message is sent as binary: each letter becomes a code of 0s and 1s.",
+        "latin_america": "A light switch is binary: on (1) or off (0).",
+        "global": "1 byte = 8 bits, enough to store one of 256 different values."
+      },
+      "terms": ["binary", "data"],
+      "practice": [
+        {"id": "binary_numbers-1", "type": "number", "question": "Convert the binary number 1010 to a normal (decimal) number.", "answer": 10, "hint": "Place values from the right are 1, 2, 4, 8.", "solution": "1*8 + 0*4 + 1*2 + 0*1 = 10."},
+        {"id": "binary_numbers-2", "type": "exact", "question": "Convert the decimal number 6 to binary.", "accepts": ["110", "0110", "00000110"], "hint": "6 = 4 + 2.", "solution": "6 = 4 + 2, so 110 in binary."},
+        {"id": "binary_numbers-3", "type": "number", "question": "How many different values can 3 bits store?", "answer": 8, "hint": "Each bit doubles the number of patterns: 2 * 2 * 2.", "solution": "2 * 2 * 2 = 8."}
+      ]
+    }
+  ]
+}

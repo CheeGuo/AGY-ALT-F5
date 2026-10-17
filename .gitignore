@@ -1,0 +1,28 @@
+# Environment variables and secrets
+.env
+*.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+
+# Packaging / build
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+
+# Local ADK session databases (contain conversation data)
+.adk/
+*.db
+
+# Empty clone of the remote repo
+AGY-ALT-F5/

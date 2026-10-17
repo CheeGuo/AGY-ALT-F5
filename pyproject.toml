@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ambient-expense-agent"
+version = "0.1.0"
+description = "Ambient Expense-Approval Agent using Google ADK 2.0 Graph Workflow API"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "google-adk>=2.0.0a0",
+    "google-genai>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["expense_agent*"]

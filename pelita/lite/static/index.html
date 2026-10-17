@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1f6f5c">
+<title>Pelita</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg">
+<style>
+:root{--bg:#f7f6f2;--fg:#1d1d1b;--mut:#66655f;--card:#fff;--line:#e2dfd6;--acc:#1f6f5c;--acc-bg:#e6f1ec;--me:#1f6f5c;--me-fg:#fff;--warn:#8a5200}
+@media (prefers-color-scheme:dark){:root{--bg:#121311;--fg:#ebeae5;--mut:#a3a29b;--card:#1c1e1b;--line:#30332e;--acc:#62c3a6;--acc-bg:#1d2b26;--me:#2a6b5a;--me-fg:#fff;--warn:#e5a94f}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans Tamil","Noto Sans Devanagari",sans-serif;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;max-width:720px;margin:0 auto}
+header{display:flex;align-items:center;gap:5px;padding:8px 10px;background:var(--card);border-bottom:1px solid var(--line)}
+.logo{font-weight:700;font-size:18px;color:var(--acc);margin-right:auto;display:flex;align-items:center;gap:6px}
+.logo i{width:10px;height:10px;border-radius:50%;background:#f2a900;box-shadow:0 0 8px #f2a900}
+.pill{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--acc-bg);color:var(--acc);white-space:nowrap}
+.pill.off{background:#f6e7cf;color:var(--warn)}
+select,input[type=search],textarea{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:10px}
+select{padding:4px 6px;min-width:0;max-width:110px;flex:0 1 auto}
+nav{display:flex;background:var(--card);border-bottom:1px solid var(--line)}
+nav button{flex:1;padding:10px 4px;border:0;background:none;font:inherit;color:var(--mut);border-bottom:3px solid transparent;cursor:pointer}
+nav button[aria-selected=true]{color:var(--acc);border-bottom-color:var(--acc);font-weight:600}
+main{flex:1;overflow-y:auto;padding:12px}
+.msg{margin:0 0 10px;max-width:88%;padding:10px 12px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word;background:var(--card);border:1px solid var(--line)}
+.msg.me{margin-left:auto;background:var(--me);color:var(--me-fg);border-color:var(--me)}
+.msg.note{background:none;border:1px dashed var(--line);color:var(--mut);font-size:14px}
+.msg small{display:block;margin-top:6px;font-size:12px;opacity:.75}
+.msg button.say{display:block;margin-top:6px;font-size:13px;padding:3px 10px;border-radius:99px;border:1px solid var(--line);background:var(--acc-bg);color:var(--acc);cursor:pointer}
+form{background:var(--card);border-top:1px solid var(--line);padding:8px 10px}
+.row{display:flex;gap:6px;align-items:flex-end}
+textarea{flex:1;min-width:0;resize:none;padding:10px;min-height:44px;max-height:120px}
+.icon{min-width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--fg)}
+.icon.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.icon.rec{background:#c62828;color:#fff;border-color:#c62828}
+.opts{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mut);margin-top:6px}
+#attach{font-size:13px;margin-bottom:6px;color:var(--acc)}
+#attach button{border:0;background:none;color:var(--mut);font-size:16px;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.card>button{width:100%;text-align:left;padding:12px;border:0;background:none;font:inherit;color:var(--fg);cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+.card .body{padding:0 12px 12px;white-space:pre-wrap}
+.tag{font-size:12px;color:var(--mut)}
+.k{font-weight:600;color:var(--acc);margin-top:8px;display:block}
+.q{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+.q button{font-size:13px;margin:4px 4px 0 0;padding:3px 10px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer}
+.word{padding:8px 0;border-bottom:1px solid var(--line)}
+.word b{color:var(--acc)}
+input[type=search]{width:100%;padding:10px;margin-bottom:8px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <span class="logo"><i></i>Pelita</span>
+  <span id="net" class="pill"></span>
+  <span id="meter" class="pill" title="Data used">0 KB</span>
+  <select id="lang" aria-label="Language"></select>
+</header>
+<nav role="tablist">
+  <button role="tab" data-tab="chat" aria-selected="true" data-t="ask"></button>
+  <button role="tab" data-tab="learn" aria-selected="false" data-t="lessons"></button>
+  <button role="tab" data-tab="words" aria-selected="false" data-t="words"></button>
+</nav>
+<main id="chat"><div id="log" aria-live="polite"></div></main>
+<main id="learn" hidden></main>
+<main id="words" hidden><input type="search" id="find" aria-label="Search"><div id="wordlist"></div></main>
+<form id="composer">
+  <div id="attach" hidden></div>
+  <div class="row">
+    <label class="icon" id="photoBtn"><input type="file" id="photo" accept="image/*" capture="environment" hidden>&#128247;</label>
+    <button type="button" class="icon" id="mic">&#127908;</button>
+    <textarea id="text" rows="1"></textarea>
+    <button class="icon go" id="send" aria-label="Send">&#10148;</button>
+  </div>
+  <div class="opts">
+    <label><input type="checkbox" id="saver"> <span data-t="saver"></span></label>
+    <button type="button" id="newchat" class="pill" style="border:0;cursor:pointer">&#8635; <span data-t="newchat"></span></button>
+  </div>
+</form>
+<script>
+(function () {
+  "use strict";
+  var LANGS = {auto: "Auto", en: "English", ms: "Bahasa Melayu", id: "Bahasa Indonesia", zh: "中文", ta: "தமிழ்", hi: "हिन्दी", sw: "Kiswahili", vi: "Tiếng Việt", fil: "Filipino", es: "Español"};
+  var VOICE = {en: "en-US", ms: "ms-MY", id: "id-ID", zh: "zh-CN", ta: "ta-IN", hi: "hi-IN", sw: "sw-KE", vi: "vi-VN", fil: "fil-PH", es: "es-ES"};
+  // UI strings: ask, lessons, words, placeholder, saver, online, offline, queued, listen, thinking, recording, photo, voice, hint, answer, welcome, error, newchat, explain, search
+  var T = {
+    en: ["Ask", "Lessons", "Words", "Type a question, or send a photo or voice note", "Data saver", "online", "offline", "Saved. It will be sent when you are back online.", "Listen", "Thinking…", "Recording… tap to stop", "Photo", "Voice note", "Hint", "Answer", "Hi! I'm Pelita. Ask me any maths, science or computer question in your language. Type it, snap a photo of your homework, or send a voice note.", "Could not reach the tutor. Your message is saved, try again.", "New topic", "Explain this to me", "Search a word"],
+    ms: ["Tanya", "Pelajaran", "Istilah", "Taip soalan, atau hantar gambar / nota suara", "Jimat data", "dalam talian", "luar talian", "Disimpan. Akan dihantar bila ada internet.", "Dengar", "Sedang berfikir…", "Merakam… tekan untuk henti", "Gambar", "Nota suara", "Petunjuk", "Jawapan", "Hai! Saya Pelita. Tanya apa-apa soalan matematik, sains atau komputer dalam bahasa kamu. Taip, ambil gambar kerja rumah, atau hantar nota suara.", "Tidak dapat sambung. Mesej disimpan, cuba lagi.", "Topik baru", "Terangkan kepada saya", "Cari istilah"],
+    id: ["Tanya", "Pelajaran", "Istilah", "Ketik pertanyaan, atau kirim foto / pesan suara", "Hemat data", "daring", "luring", "Disimpan. Akan dikirim saat kembali online.", "Dengar", "Sedang berpikir…", "Merekam… ketuk untuk berhenti", "Foto", "Pesan suara", "Petunjuk", "Jawaban", "Hai! Aku Pelita. Tanyakan soal matematika, sains, atau komputer dalam bahasamu. Ketik, foto PR-mu, atau kirim pesan suara.", "Tidak bisa terhubung. Pesan disimpan, coba lagi.", "Topik baru", "Jelaskan kepadaku", "Cari istilah"],
+    zh: ["提问", "课程", "词汇", "输入问题，或发送照片/语音", "省流量", "在线", "离线", "已保存，联网后自动发送。", "朗读", "思考中…", "录音中…点击停止", "照片", "语音", "提示", "答案", "你好！我是 Pelita。用你的语言问我任何数学、科学或电脑问题：打字、拍作业照片或发语音都可以。", "无法连接，消息已保存，请重试。", "新话题", "给我讲讲", "搜索词汇"],
+    ta: ["கேள்", "பாடங்கள்", "சொற்கள்", "கேள்வியைத் தட்டச்சு செய்யவும், அல்லது படம் / குரல் அனுப்பவும்", "தரவு சேமிப்பு", "இணைப்பில்", "இணைப்பு இல்லை", "சேமிக்கப்பட்டது. இணையம் வந்ததும் அனுப்பப்படும்.", "கேட்க", "யோசிக்கிறேன்…", "பதிவு செய்கிறது… நிறுத்த தட்டவும்", "படம்", "குரல் பதிவு", "குறிப்பு", "விடை", "வணக்கம்! நான் பெலிட்டா. கணிதம், அறிவியல், கணினி பற்றி உங்கள் மொழியில் கேளுங்கள்: தட்டச்சு செய்யுங்கள், வீட்டுப்பாடத்தைப் படம் எடுங்கள், அல்லது குரல் பதிவு அனுப்புங்கள்.", "இணைக்க முடியவில்லை. செய்தி சேமிக்கப்பட்டது, மீண்டும் முயற்சிக்கவும்.", "புதிய தலைப்பு", "எனக்கு விளக்குங்கள்", "சொல்லைத் தேடுக"],
+    hi: ["पूछें", "पाठ", "शब्द", "सवाल लिखें, या फ़ोटो / आवाज़ भेजें", "डेटा बचत", "ऑनलाइन", "ऑफ़लाइन", "सहेजा गया। इंटरनेट आने पर भेजा जाएगा।", "सुनें", "सोच रहा हूँ…", "रिकॉर्डिंग… रोकने के लिए दबाएँ", "फ़ोटो", "आवाज़ संदेश", "संकेत", "उत्तर", "नमस्ते! मैं पेलिटा हूँ। गणित, विज्ञान या कंप्यूटर का कोई भी सवाल अपनी भाषा में पूछें: लिखें, होमवर्क की फ़ोटो भेजें, या बोलकर पूछें।", "जुड़ नहीं सका। संदेश सहेजा गया, फिर से कोशिश करें।", "नया विषय", "मुझे समझाइए", "शब्द खोजें"],
+    sw: ["Uliza", "Masomo", "Maneno", "Andika swali, au tuma picha / sauti", "Okoa data", "mtandaoni", "nje ya mtandao", "Imehifadhiwa. Itatumwa ukirudi mtandaoni.", "Sikiliza", "Inafikiri…", "Inarekodi… gusa kusimamisha", "Picha", "Ujumbe wa sauti", "Kidokezo", "Jibu", "Habari! Mimi ni Pelita. Niulize swali lolote la hisabati, sayansi au kompyuta kwa lugha yako: andika, piga picha ya kazi ya nyumbani, au tuma ujumbe wa sauti.", "Imeshindwa kuunganisha. Ujumbe umehifadhiwa, jaribu tena.", "Mada mpya", "Nieleze hili", "Tafuta neno"],
+    vi: ["Hỏi", "Bài học", "Thuật ngữ", "Nhập câu hỏi, hoặc gửi ảnh / tin nhắn thoại", "Tiết kiệm dữ liệu", "trực tuyến", "ngoại tuyến", "Đã lưu. Sẽ gửi khi có mạng.", "Nghe", "Đang suy nghĩ…", "Đang ghi âm… chạm để dừng", "Ảnh", "Tin nhắn thoại", "Gợi ý", "Đáp án", "Xin chào! Mình là Pelita. Hỏi mình bất kỳ câu hỏi toán, khoa học hay tin học nào bằng tiếng của bạn: gõ chữ, chụp ảnh bài tập, hoặc gửi tin nhắn thoại.", "Không kết nối được. Tin nhắn đã được lưu, hãy thử lại.", "Chủ đề mới", "Giải thích cho mình", "Tìm thuật ngữ"],
+    fil: ["Magtanong", "Aralin", "Salita", "Mag-type ng tanong, o magpadala ng larawan / voice note", "Tipid data", "online", "offline", "Na-save. Ipapadala pagbalik ng internet.", "Pakinggan", "Nag-iisip…", "Nire-record… pindutin para huminto", "Larawan", "Voice note", "Pahiwatig", "Sagot", "Kumusta! Ako si Pelita. Magtanong ng kahit ano tungkol sa math, science o computer sa sarili mong wika: i-type, kunan ng litrato ang assignment, o magpadala ng voice note.", "Hindi makakonekta. Na-save ang mensahe, subukan ulit.", "Bagong paksa", "Ipaliwanag sa akin", "Maghanap ng salita"],
+    es: ["Preguntar", "Lecciones", "Palabras", "Escribe una pregunta, o envía una foto / nota de voz", "Ahorro de datos", "en línea", "sin conexión", "Guardado. Se enviará cuando vuelvas a tener conexión.", "Escuchar", "Pensando…", "Grabando… toca para parar", "Foto", "Nota de voz", "Pista", "Respuesta", "¡Hola! Soy Pelita. Pregúntame cualquier duda de matemáticas, ciencias o informática en tu idioma: escríbela, toma una foto de tu tarea o envía una nota de voz.", "No se pudo conectar. Tu mensaje está guardado, inténtalo de nuevo.", "Nuevo tema", "Explícame esto", "Buscar una palabra"]
+  };
+  var KEYS = ["ask", "lessons", "words", "placeholder", "saver", "online", "offline", "queued", "listen", "thinking", "recording", "photo", "voice", "hint", "answer", "welcome", "error", "newchat", "explain", "search"];
+
+  function $(id) { return document.getElementById(id); }
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem("pelita." + k); localStorage.setItem("pelita." + k, v); } catch (e) { return null; } }
+  function rid() { var a = new Uint8Array(12); (window.crypto || window.msCrypto).getRandomValues(a); return Array.prototype.map.call(a, function (b) { return ("0" + b.toString(16)).slice(-2); }).join(""); }
+
+  var learnerId = store("id") || ("w-" + rid()); store("id", learnerId);
+  var sessionId = store("sid") || "";
+  var lang = store("lang") || "auto";
+  var used = +(store("used") || 0);
+  var pending = {image: null, audio: null};
+  var queue = []; try { queue = JSON.parse(store("queue") || "[]"); } catch (e) { queue = []; }
+  var pack = null;
+
+  function uiLang() {
+    if (lang !== "auto") return lang;
+    var nav = (navigator.language || "en").toLowerCase().split("-")[0];
+    return T[nav] ? nav : (nav === "tl" ? "fil" : "en");
+  }
+  function t(key) { var row = T[uiLang()] || T.en; return row[KEYS.indexOf(key)] || T.en[KEYS.indexOf(key)]; }
+
+  function meter(bytes) { used += bytes; store("used", String(Math.round(used))); $("meter").textContent = (used < 1048576 ? Math.round(used / 1024) + " KB" : (used / 1048576).toFixed(1) + " MB"); }
+  function kb(n) { return n < 1024 ? n + " B" : Math.round(n / 1024) + " KB"; }
+
+  function paintNet() { var on = navigator.onLine !== false; var n = $("net"); n.textContent = t(on ? "online" : "offline"); n.className = "pill" + (on ? "" : " off"); }
+
+  function paintUI() {
+    document.documentElement.lang = uiLang();
+    var els = document.querySelectorAll("[data-t]");
+    for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute("data-t"));
+    $("text").placeholder = t("placeholder");
+    $("find").placeholder = t("search");
+    $("photoBtn").title = t("photo"); $("mic").title = t("voice"); $("mic").setAttribute("aria-label", t("voice"));
+    paintNet();
+  }
+
+  function bubble(text, who, extra) {
+    var d = document.createElement("div");
+    d.className = "msg " + (who || "");
+    d.textContent = text;
+    if (extra) { var s = document.createElement("small"); s.textContent = extra; d.appendChild(s); }
+    if (who === "bot" && window.speechSynthesis) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "say"; b.textContent = "\u{1F50A} " + t("listen");
+      b.onclick = function () { speak(text); };
+      d.appendChild(b);
+    }
+    $("log").appendChild(d);
+    $("chat").scrollTop = $("chat").scrollHeight;
+    return d;
+  }
+
+  // Text-to-speech runs on the device: zero extra data, helps low-literacy learners
+  function speak(text) {
+    var s = window.speechSynthesis; s.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    var code = VOICE[lang !== "auto" ? lang : uiLang()] || "en-US";
+    u.lang = code; u.rate = 0.95;
+    var voices = s.getVoices() || [];
+    for (var i = 0; i < voices.length; i++) if (voices[i].lang && voices[i].lang.replace("_", "-").indexOf(code.split("-")[0]) === 0) { u.voice = voices[i]; break; }
+    s.speak(u);
+  }
+
+  // Photos are shrunk on the device before upload: a 4 MB camera photo becomes ~40-90 KB
+  function shrink(file, cb) {
+    var saver = $("saver").checked, max = saver ? 768 : 1024, q = saver ? 0.5 : 0.6;
+    var img = new Image(), url = URL.createObjectURL(file);
+    img.onload = function () {
+      var s = Math.min(1, max / Math.max(img.width, img.height));
+      var c = document.createElement("canvas"); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      var g = c.getContext("2d"); if (saver) g.filter = "grayscale(1)";
+      g.drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+      c.toBlob(function (b) { cb(b || file); }, "image/jpeg", q);
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); cb(file.size < 1500000 ? file : null); };
+    img.src = url;
+  }
+
+  function paintAttach() {
+    var a = $("attach"), bits = [];
+    if (pending.image) bits.push("\u{1F4F7} " + t("photo") + " (" + kb(pending.image.size) + ")");
+    if (pending.audio) bits.push("\u{1F3A4} " + t("voice") + " (" + kb(pending.audio.size) + ")");
+    a.hidden = !bits.length; a.textContent = bits.join("  ·  ") + " ";
+    if (bits.length) { var x = document.createElement("button"); x.type = "button"; x.textContent = "✕"; x.setAttribute("aria-label", "Remove"); x.onclick = function () { pending.image = pending.audio = null; paintAttach(); }; a.appendChild(x); }
+  }
+
+  $("photo").onchange = function () {
+    var f = this.files && this.files[0]; this.value = "";
+    if (f) shrink(f, function (b) { pending.image = b; paintAttach(); });
+  };
+
+  // Voice notes: 16 kbps Opus is ~2 KB per second of speech
+  var rec = null, recTimer = null;
+  if (!window.MediaRecorder || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) $("mic").hidden = true;
+  $("mic").onclick = function () {
+    if (rec && rec.state === "recording") { rec.stop(); return; }
+    navigator.mediaDevices.getUserMedia({audio: {channelCount: 1, noiseSuppression: true, echoCancellation: true}}).then(function (stream) {
+      var opts = {audioBitsPerSecond: 16000}, types = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/mp4"];
+      for (var i = 0; i < types.length; i++) if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(types[i])) { opts.mimeType = types[i]; break; }
+      var chunks = [];
+      rec = new MediaRecorder(stream, opts);
+      rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = function () {
+        clearTimeout(recTimer); stream.getTracks().forEach(function (tr) { tr.stop(); });
+        $("mic").className = "icon"; $("text").placeholder = t("placeholder");
+        pending.audio = new Blob(chunks, {type: (rec.mimeType || "audio/webm").split(";")[0]}); paintAttach();
+      };
+      rec.start(); $("mic").className = "icon rec"; $("text").placeholder = t("recording");
+      recTimer = setTimeout(function () { if (rec.state === "recording") rec.stop(); }, 30000);
+    }).catch(function () { $("mic").hidden = true; });
+  };
+
+  function saveQueue() { store("queue", JSON.stringify(queue)); }
+
+  function post(item, attachments, done) {
+    var fd = new FormData();
+    fd.append("learner_id", learnerId); fd.append("session_id", sessionId);
+    fd.append("text", item.text || ""); fd.append("data_saver", $("saver").checked ? "1" : "0");
+    fd.append("language", lang);
+    var up = new Blob([item.text || ""]).size + 300;
+    if (attachments && attachments.image) { fd.append("image", attachments.image, "photo.jpg"); up += attachments.image.size; }
+    if (attachments && attachments.audio) {
+      var ext = attachments.audio.type.indexOf("ogg") > -1 ? "ogg" : attachments.audio.type.indexOf("mp4") > -1 ? "m4a" : "webm";
+      fd.append("audio", attachments.audio, "voice." + ext); up += attachments.audio.size;
+    }
+    var wait = bubble(t("thinking"), "note");
+    fetch("/api/chat", {method: "POST", body: fd}).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      var down = +(r.headers.get("content-length") || 0);
+      return r.json().then(function (j) { return [j, down]; });
+    }).then(function (res) {
+      var j = res[0], down = res[1] || new Blob([JSON.stringify(j)]).size;
+      wait.parentNode.removeChild(wait);
+      sessionId = j.session_id; store("sid", sessionId);
+      meter(up + down);
+      bubble(j.reply, "bot", "↑ " + kb(up) + "  ↓ " + kb(down));
+      done(true);
+    }).catch(function () {
+      wait.parentNode.removeChild(wait);
+      bubble(t(navigator.onLine === false ? "queued" : "error"), "note");
+      done(false);
+    });
+  }
+
+  function flush() {
+    if (!queue.length || navigator.onLine === false) return;
+    var item = queue[0];
+    post(item, null, function (ok) { if (ok) { queue.shift(); saveQueue(); flush(); } });
+  }
+
+  $("composer").onsubmit = function (e) {
+    e.preventDefault();
+    var text = $("text").value.trim();
+    if (!text && !pending.image && !pending.audio) return;
+    var label = text; if (pending.image) label += (label ? "\n" : "") + "\u{1F4F7}"; if (pending.audio) label += (label ? " " : "") + "\u{1F3A4}";
+    bubble(label, "me");
+    $("text").value = ""; $("text").style.height = "";
+    var att = {image: pending.image, audio: pending.audio}; pending.image = pending.audio = null; paintAttach();
+    if (navigator.onLine === false && !att.image && !att.audio) { queue.push({text: text}); saveQueue(); bubble(t("queued"), "note"); return; }
+    post({text: text}, att, function (ok) {
+      if (!ok && !att.image && !att.audio) { queue.push({text: text}); saveQueue(); }
+      if (!ok && (att.image || att.audio)) { pending = att; paintAttach(); }
+    });
+  };
+  $("text").oninput = function () { this.style.height = ""; this.style.height = Math.min(this.scrollHeight, 120) + "px"; };
+  $("text").onkeydown = function (e) { if (e.key === "Enter" && !e.shiftKey && window.matchMedia("(pointer:fine)").matches) { e.preventDefault(); $("send").click(); } };
+
+  // ----- Offline lessons + glossary (cached by the service worker)
+  function loadPack() {
+    var l = lang === "auto" ? uiLang() : lang;
+    fetch("/api/pack?lang=" + encodeURIComponent(l)).then(function (r) {
+      var size = +(r.headers.get("content-length") || 0);
+      return r.json().then(function (j) { return [j, size]; });
+    }).then(function (res) {
+      pack = res[0];
+      var key = "packed." + l; if (!store(key) && res[1]) { meter(res[1]); store(key, "1"); }
+      paintLessons(); paintWords();
+    }).catch(function () {});
+  }
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+
+  function paintLessons() {
+    var root = $("learn"); root.innerHTML = "";
+    pack.lessons.forEach(function (ls) {
+      var card = el("div", "card"), head = el("button"), body = el("div", "body");
+      head.type = "button"; head.appendChild(el("span", "", ls.title)); head.appendChild(el("span", "tag", ls.subject));
+      body.hidden = true;
+      head.onclick = function () { body.hidden = !body.hidden; };
+      body.appendChild(el("span", "", ls.key_idea));
+      if (ls.formula) { body.appendChild(el("span", "k", "Formula")); body.appendChild(el("span", "", ls.formula)); }
+      body.appendChild(el("span", "k", "Example")); body.appendChild(el("span", "", ls.worked_example + "\n" + ls.example));
+      body.appendChild(el("span", "k", "Common mistake")); body.appendChild(el("span", "", ls.common_mistake));
+      var words = ls.terms.map(function (p) { return p[1] ? p[1] + " (" + p[0] + ")" : p[0]; }).join(", ");
+      if (words) { body.appendChild(el("span", "k", "Key words")); body.appendChild(el("span", "", words)); }
+      ls.practice.forEach(function (p) {
+        var q = el("div", "q", p.q + "\n"), out = el("div", "");
+        [["hint", p.hint], ["answer", p.solution]].forEach(function (pair) {
+          var b = el("button", "", t(pair[0])); b.type = "button";
+          b.onclick = function () { out.textContent = pair[1]; };
+          q.appendChild(b);
+        });
+        q.appendChild(out); body.appendChild(q);
+      });
+      var ask = el("button", "say", t("explain")); ask.type = "button"; ask.style.marginTop = "10px";
+      ask.onclick = function () { tab("chat"); $("text").value = t("explain") + ": " + ls.title; $("text").focus(); };
+      body.appendChild(ask);
+      card.appendChild(head); card.appendChild(body); root.appendChild(card);
+    });
+  }
+
+  function paintWords() {
+    var f = ($("find").value || "").toLowerCase(), list = $("wordlist"); list.innerHTML = "";
+    pack.glossary.forEach(function (w) {
+      var hay = (w.en + " " + w.local + " " + w.definition).toLowerCase();
+      if (f && hay.indexOf(f) < 0) return;
+      var d = el("div", "word"); d.appendChild(el("b", "", w.local ? w.local + " " : w.en + " "));
+      if (w.local) d.appendChild(el("span", "tag", "(" + w.en + ") "));
+      d.appendChild(el("div", "", w.definition)); list.appendChild(d);
+    });
+  }
+  $("find").oninput = function () { if (pack) paintWords(); };
+
+  function tab(name) {
+    var bs = document.querySelectorAll("nav button");
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-selected", bs[i].getAttribute("data-tab") === name ? "true" : "false");
+    ["chat", "learn", "words"].forEach(function (id) { $(id).hidden = id !== name; });
+    $("composer").hidden = name !== "chat";
+  }
+  var navs = document.querySelectorAll("nav button");
+  for (var i = 0; i < navs.length; i++) navs[i].onclick = function () { tab(this.getAttribute("data-tab")); };
+
+  // ----- Settings
+  var sel = $("lang");
+  Object.keys(LANGS).forEach(function (k) { var o = document.createElement("option"); o.value = k; o.textContent = LANGS[k]; sel.appendChild(o); });
+  sel.value = lang;
+  sel.onchange = function () { lang = this.value; store("lang", lang); paintUI(); loadPack(); };
+  $("saver").checked = store("saver") === "1" || !!(navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType || "")));
+  $("saver").onchange = function () { store("saver", this.checked ? "1" : "0"); };
+  $("newchat").onclick = function () { sessionId = ""; store("sid", ""); $("log").innerHTML = ""; bubble(t("welcome"), "bot"); };
+
+  window.addEventListener("online", function () { paintNet(); flush(); });
+  window.addEventListener("offline", paintNet);
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(function () {});
+
+  paintUI(); meter(0); bubble(t("welcome"), "bot"); loadPack(); flush();
+  if (/^#(learn|words)$/.test(location.hash)) tab(location.hash.slice(1));  // deep links, e.g. from an SMS
+})();
+</script>
+</body>
+</html>

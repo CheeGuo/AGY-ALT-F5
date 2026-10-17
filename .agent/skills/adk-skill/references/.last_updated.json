@@ -1,0 +1,8 @@
+﻿{
+    "index_file_size_bytes":  18287,
+    "llms_index_url":  "https://adk.dev/llms.txt",
+    "last_updated_utc":  "2026-10-17T01:25:09.1223198Z",
+    "pointer_source":  "https://raw.githubusercontent.com/google/adk-python/main/llms-full.txt",
+    "full_file_size_bytes":  3496651,
+    "llms_full_url":  "https://adk.dev/llms-full.txt"
+}
