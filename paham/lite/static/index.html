@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="ms">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1f6f5c">
-<title>Pelita</title>
+<title>Paham</title>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg">
 <style>
@@ -53,19 +53,12 @@ input[type=search]{width:100%;padding:10px;margin-bottom:8px}
 </head>
 <body>
 <header>
-  <span class="logo"><i></i>Pelita</span>
+  <span class="logo"><i></i>Paham</span>
   <span id="net" class="pill"></span>
   <span id="meter" class="pill" title="Data used">0 KB</span>
   <select id="lang" aria-label="Language"></select>
 </header>
-<nav role="tablist">
-  <button role="tab" data-tab="chat" aria-selected="true" data-t="ask"></button>
-  <button role="tab" data-tab="learn" aria-selected="false" data-t="lessons"></button>
-  <button role="tab" data-tab="words" aria-selected="false" data-t="words"></button>
-</nav>
 <main id="chat"><div id="log" aria-live="polite"></div></main>
-<main id="learn" hidden></main>
-<main id="words" hidden><input type="search" id="find" aria-label="Search"><div id="wordlist"></div></main>
 <form id="composer">
   <div id="attach" hidden></div>
   <div class="row">
@@ -82,40 +75,36 @@ input[type=search]{width:100%;padding:10px;margin-bottom:8px}
 <script>
 (function () {
   "use strict";
-  var LANGS = {auto: "Auto", en: "English", ms: "Bahasa Melayu", id: "Bahasa Indonesia", zh: "中文", ta: "தமிழ்", hi: "हिन्दी", sw: "Kiswahili", vi: "Tiếng Việt", fil: "Filipino", es: "Español"};
+  var LANGS = {en: "English", ms: "Bahasa Melayu", id: "Bahasa Indonesia", zh: "中文", ta: "தமிழ்", hi: "हिन्दी", sw: "Kiswahili", vi: "Tiếng Việt", fil: "Filipino", es: "Español"};
   var VOICE = {en: "en-US", ms: "ms-MY", id: "id-ID", zh: "zh-CN", ta: "ta-IN", hi: "hi-IN", sw: "sw-KE", vi: "vi-VN", fil: "fil-PH", es: "es-ES"};
   // UI strings: ask, lessons, words, placeholder, saver, online, offline, queued, listen, thinking, recording, photo, voice, hint, answer, welcome, error, newchat, explain, search
   var T = {
-    en: ["Ask", "Lessons", "Words", "Type a question, or send a photo or voice note", "Data saver", "online", "offline", "Saved. It will be sent when you are back online.", "Listen", "Thinking…", "Recording… tap to stop", "Photo", "Voice note", "Hint", "Answer", "Hi! I'm Pelita. Ask me any maths, science or computer question in your language. Type it, snap a photo of your homework, or send a voice note.", "Could not reach the tutor. Your message is saved, try again.", "New topic", "Explain this to me", "Search a word"],
-    ms: ["Tanya", "Pelajaran", "Istilah", "Taip soalan, atau hantar gambar / nota suara", "Jimat data", "dalam talian", "luar talian", "Disimpan. Akan dihantar bila ada internet.", "Dengar", "Sedang berfikir…", "Merakam… tekan untuk henti", "Gambar", "Nota suara", "Petunjuk", "Jawapan", "Hai! Saya Pelita. Tanya apa-apa soalan matematik, sains atau komputer dalam bahasa kamu. Taip, ambil gambar kerja rumah, atau hantar nota suara.", "Tidak dapat sambung. Mesej disimpan, cuba lagi.", "Topik baru", "Terangkan kepada saya", "Cari istilah"],
-    id: ["Tanya", "Pelajaran", "Istilah", "Ketik pertanyaan, atau kirim foto / pesan suara", "Hemat data", "daring", "luring", "Disimpan. Akan dikirim saat kembali online.", "Dengar", "Sedang berpikir…", "Merekam… ketuk untuk berhenti", "Foto", "Pesan suara", "Petunjuk", "Jawaban", "Hai! Aku Pelita. Tanyakan soal matematika, sains, atau komputer dalam bahasamu. Ketik, foto PR-mu, atau kirim pesan suara.", "Tidak bisa terhubung. Pesan disimpan, coba lagi.", "Topik baru", "Jelaskan kepadaku", "Cari istilah"],
-    zh: ["提问", "课程", "词汇", "输入问题，或发送照片/语音", "省流量", "在线", "离线", "已保存，联网后自动发送。", "朗读", "思考中…", "录音中…点击停止", "照片", "语音", "提示", "答案", "你好！我是 Pelita。用你的语言问我任何数学、科学或电脑问题：打字、拍作业照片或发语音都可以。", "无法连接，消息已保存，请重试。", "新话题", "给我讲讲", "搜索词汇"],
-    ta: ["கேள்", "பாடங்கள்", "சொற்கள்", "கேள்வியைத் தட்டச்சு செய்யவும், அல்லது படம் / குரல் அனுப்பவும்", "தரவு சேமிப்பு", "இணைப்பில்", "இணைப்பு இல்லை", "சேமிக்கப்பட்டது. இணையம் வந்ததும் அனுப்பப்படும்.", "கேட்க", "யோசிக்கிறேன்…", "பதிவு செய்கிறது… நிறுத்த தட்டவும்", "படம்", "குரல் பதிவு", "குறிப்பு", "விடை", "வணக்கம்! நான் பெலிட்டா. கணிதம், அறிவியல், கணினி பற்றி உங்கள் மொழியில் கேளுங்கள்: தட்டச்சு செய்யுங்கள், வீட்டுப்பாடத்தைப் படம் எடுங்கள், அல்லது குரல் பதிவு அனுப்புங்கள்.", "இணைக்க முடியவில்லை. செய்தி சேமிக்கப்பட்டது, மீண்டும் முயற்சிக்கவும்.", "புதிய தலைப்பு", "எனக்கு விளக்குங்கள்", "சொல்லைத் தேடுக"],
-    hi: ["पूछें", "पाठ", "शब्द", "सवाल लिखें, या फ़ोटो / आवाज़ भेजें", "डेटा बचत", "ऑनलाइन", "ऑफ़लाइन", "सहेजा गया। इंटरनेट आने पर भेजा जाएगा।", "सुनें", "सोच रहा हूँ…", "रिकॉर्डिंग… रोकने के लिए दबाएँ", "फ़ोटो", "आवाज़ संदेश", "संकेत", "उत्तर", "नमस्ते! मैं पेलिटा हूँ। गणित, विज्ञान या कंप्यूटर का कोई भी सवाल अपनी भाषा में पूछें: लिखें, होमवर्क की फ़ोटो भेजें, या बोलकर पूछें।", "जुड़ नहीं सका। संदेश सहेजा गया, फिर से कोशिश करें।", "नया विषय", "मुझे समझाइए", "शब्द खोजें"],
-    sw: ["Uliza", "Masomo", "Maneno", "Andika swali, au tuma picha / sauti", "Okoa data", "mtandaoni", "nje ya mtandao", "Imehifadhiwa. Itatumwa ukirudi mtandaoni.", "Sikiliza", "Inafikiri…", "Inarekodi… gusa kusimamisha", "Picha", "Ujumbe wa sauti", "Kidokezo", "Jibu", "Habari! Mimi ni Pelita. Niulize swali lolote la hisabati, sayansi au kompyuta kwa lugha yako: andika, piga picha ya kazi ya nyumbani, au tuma ujumbe wa sauti.", "Imeshindwa kuunganisha. Ujumbe umehifadhiwa, jaribu tena.", "Mada mpya", "Nieleze hili", "Tafuta neno"],
-    vi: ["Hỏi", "Bài học", "Thuật ngữ", "Nhập câu hỏi, hoặc gửi ảnh / tin nhắn thoại", "Tiết kiệm dữ liệu", "trực tuyến", "ngoại tuyến", "Đã lưu. Sẽ gửi khi có mạng.", "Nghe", "Đang suy nghĩ…", "Đang ghi âm… chạm để dừng", "Ảnh", "Tin nhắn thoại", "Gợi ý", "Đáp án", "Xin chào! Mình là Pelita. Hỏi mình bất kỳ câu hỏi toán, khoa học hay tin học nào bằng tiếng của bạn: gõ chữ, chụp ảnh bài tập, hoặc gửi tin nhắn thoại.", "Không kết nối được. Tin nhắn đã được lưu, hãy thử lại.", "Chủ đề mới", "Giải thích cho mình", "Tìm thuật ngữ"],
-    fil: ["Magtanong", "Aralin", "Salita", "Mag-type ng tanong, o magpadala ng larawan / voice note", "Tipid data", "online", "offline", "Na-save. Ipapadala pagbalik ng internet.", "Pakinggan", "Nag-iisip…", "Nire-record… pindutin para huminto", "Larawan", "Voice note", "Pahiwatig", "Sagot", "Kumusta! Ako si Pelita. Magtanong ng kahit ano tungkol sa math, science o computer sa sarili mong wika: i-type, kunan ng litrato ang assignment, o magpadala ng voice note.", "Hindi makakonekta. Na-save ang mensahe, subukan ulit.", "Bagong paksa", "Ipaliwanag sa akin", "Maghanap ng salita"],
-    es: ["Preguntar", "Lecciones", "Palabras", "Escribe una pregunta, o envía una foto / nota de voz", "Ahorro de datos", "en línea", "sin conexión", "Guardado. Se enviará cuando vuelvas a tener conexión.", "Escuchar", "Pensando…", "Grabando… toca para parar", "Foto", "Nota de voz", "Pista", "Respuesta", "¡Hola! Soy Pelita. Pregúntame cualquier duda de matemáticas, ciencias o informática en tu idioma: escríbela, toma una foto de tu tarea o envía una nota de voz.", "No se pudo conectar. Tu mensaje está guardado, inténtalo de nuevo.", "Nuevo tema", "Explícame esto", "Buscar una palabra"]
+    en: ["Ask", "Lessons", "Words", "Type a question, or send a photo or voice note", "Data saver", "online", "offline", "Saved. It will be sent when you are back online.", "Listen", "Thinking…", "Recording… tap to stop", "Photo", "Voice note", "Hint", "Answer", "Hi! I'm Paham. Ask me any maths, science or computer question in your language. Type it, snap a photo of your homework, or send a voice note.", "Could not reach the tutor. Your message is saved, try again.", "New topic", "Explain this to me", "Search a word"],
+    ms: ["Tanya", "Pelajaran", "Istilah", "Taip soalan, atau hantar gambar / nota suara", "Jimat data", "dalam talian", "luar talian", "Disimpan. Akan dihantar bila ada internet.", "Dengar", "Sedang berfikir…", "Merakam… tekan untuk henti", "Gambar", "Nota suara", "Petunjuk", "Jawapan", "Hai! Saya Cikgu PAHAM. Tanya apa-apa soalan matematik, sains atau komputer dalam bahasa kamu. Taip, ambil gambar kerja rumah, atau hantar nota suara.", "Tidak dapat sambung. Mesej disimpan, cuba lagi.", "Topik baru", "Terangkan kepada saya", "Cari istilah"],
+    id: ["Tanya", "Pelajaran", "Istilah", "Ketik pertanyaan, atau kirim foto / pesan suara", "Hemat data", "daring", "luring", "Disimpan. Akan dikirim saat kembali online.", "Dengar", "Sedang berpikir…", "Merekam… ketuk untuk berhenti", "Foto", "Pesan suara", "Petunjuk", "Jawaban", "Hai! Aku Paham. Tanyakan soal matematika, sains, atau komputer dalam bahasamu. Ketik, foto PR-mu, atau kirim pesan suara.", "Tidak bisa terhubung. Pesan disimpan, coba lagi.", "Topik baru", "Jelaskan kepadaku", "Cari istilah"],
+    zh: ["提问", "课程", "词汇", "输入问题，或发送照片/语音", "省流量", "在线", "离线", "已保存，联网后自动发送。", "朗读", "思考中…", "录音中…点击停止", "照片", "语音", "提示", "答案", "你好！我是 Paham。用你的语言问我任何数学、科学或电脑问题：打字、拍作业照片或发语音都可以。", "无法连接，消息已保存，请重试。", "新话题", "给我讲讲", "搜索词汇"],
+    ta: ["கேள்", "பாடங்கள்", "சொற்கள்", "கேள்வியைத் தட்டச்சு செய்யவும், அல்லது படம் / குரல் அனுப்பவும்", "தரவு சேமிப்பு", "இணைப்பில்", "இணைப்பு இல்லை", "சேமிக்கப்பட்டது. இணையம் வந்ததும் அனுப்பப்படும்.", "கேட்க", "யோசிக்கிறேன்…", "பதிவு செய்கிறது… நிறுத்த தட்டவும்", "படம்", "குரல் பதிவு", "குறிப்பு", "விடை", "வணக்கம்! நான் PAHAM. கணிதம், அறிவியல், கணினி பற்றி உங்கள் மொழியில் கேளுங்கள்: தட்டச்சு செய்யுங்கள், வீட்டுப்பாடத்தைப் படம் எடுங்கள், அல்லது குரல் பதிவு அனுப்புங்கள்.", "இணைக்க முடியவில்லை. செய்தி சேமிக்கப்பட்டது, மீண்டும் முயற்சிக்கவும்.", "புதிய தலைப்பு", "எனக்கு விளக்குங்கள்", "சொல்லைத் தேடுக"],
+    hi: ["पूछें", "पाठ", "शब्द", "सवाल लिखें, या फ़ोटो / आवाज़ भेजें", "डेटा बचत", "ऑनलाइन", "ऑफ़लाइन", "सहेजा गया। इंटरनेट आने पर भेजा जाएगा।", "सुनें", "सोच रहा हूँ…", "रिकॉर्डिंग… रोकने के लिए दबाएँ", "फ़ोटो", "आवाज़ संदेश", "संकेत", "उत्तर", "नमस्ते! मैं PAHAM हूँ। गणित, विज्ञान या कंप्यूटर का कोई भी सवाल अपनी भाषा में पूछें: लिखें, होमवर्क की फ़ोटो भेजें, या बोलकर पूछें।", "जुड़ नहीं सका। संदेश सहेजा गया, फिर से कोशिश करें।", "नया विषय", "मुझे समझाइए", "शब्द खोजें"],
+    sw: ["Uliza", "Masomo", "Maneno", "Andika swali, au tuma picha / sauti", "Okoa data", "mtandaoni", "nje ya mtandao", "Imehifadhiwa. Itatumwa ukirudi mtandaoni.", "Sikiliza", "Inafikiri…", "Inarekodi… gusa kusimamisha", "Picha", "Ujumbe wa sauti", "Kidokezo", "Jibu", "Habari! Mimi ni Paham. Niulize swali lolote la hisabati, sayansi au kompyuta kwa lugha yako: andika, piga picha ya kazi ya nyumbani, au tuma ujumbe wa sauti.", "Imeshindwa kuunganisha. Ujumbe umehifadhiwa, jaribu tena.", "Mada mpya", "Nieleze hili", "Tafuta neno"],
+    vi: ["Hỏi", "Bài học", "Thuật ngữ", "Nhập câu hỏi, hoặc gửi ảnh / tin nhắn thoại", "Tiết kiệm dữ liệu", "trực tuyến", "ngoại tuyến", "Đã lưu. Sẽ gửi khi có mạng.", "Nghe", "Đang suy nghĩ…", "Đang ghi âm… chạm để dừng", "Ảnh", "Tin nhắn thoại", "Gợi ý", "Đáp án", "Xin chào! Mình là Paham. Hỏi mình bất kỳ câu hỏi toán, khoa học hay tin học nào bằng tiếng của bạn: gõ chữ, chụp ảnh bài tập, hoặc gửi tin nhắn thoại.", "Không kết nối được. Tin nhắn đã được lưu, hãy thử lại.", "Chủ đề mới", "Giải thích cho mình", "Tìm thuật ngữ"],
+    fil: ["Magtanong", "Aralin", "Salita", "Mag-type ng tanong, o magpadala ng larawan / voice note", "Tipid data", "online", "offline", "Na-save. Ipapadala pagbalik ng internet.", "Pakinggan", "Nag-iisip…", "Nire-record… pindutin para huminto", "Larawan", "Voice note", "Pahiwatig", "Sagot", "Kumusta! Ako si Paham. Magtanong ng kahit ano tungkol sa math, science o computer sa sarili mong wika: i-type, kunan ng litrato ang assignment, o magpadala ng voice note.", "Hindi makakonekta. Na-save ang mensahe, subukan ulit.", "Bagong paksa", "Ipaliwanag sa akin", "Maghanap ng salita"],
+    es: ["Preguntar", "Lecciones", "Palabras", "Escribe una pregunta, o envía una foto / nota de voz", "Ahorro de datos", "en línea", "sin conexión", "Guardado. Se enviará cuando vuelvas a tener conexión.", "Escuchar", "Pensando…", "Grabando… toca para parar", "Foto", "Nota de voz", "Pista", "Respuesta", "¡Hola! Soy Paham. Pregúntame cualquier duda de matemáticas, ciencias o informática en tu idioma: escríbela, toma una foto de tu tarea o envía una nota de voz.", "No se pudo conectar. Tu mensaje está guardado, inténtalo de nuevo.", "Nuevo tema", "Explícame esto", "Buscar una palabra"]
   };
   var KEYS = ["ask", "lessons", "words", "placeholder", "saver", "online", "offline", "queued", "listen", "thinking", "recording", "photo", "voice", "hint", "answer", "welcome", "error", "newchat", "explain", "search"];
 
   function $(id) { return document.getElementById(id); }
-  function store(k, v) { try { if (v === undefined) return localStorage.getItem("pelita." + k); localStorage.setItem("pelita." + k, v); } catch (e) { return null; } }
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem("paham." + k); localStorage.setItem("paham." + k, v); } catch (e) { return null; } }
   function rid() { var a = new Uint8Array(12); (window.crypto || window.msCrypto).getRandomValues(a); return Array.prototype.map.call(a, function (b) { return ("0" + b.toString(16)).slice(-2); }).join(""); }
 
   var learnerId = store("id") || ("w-" + rid()); store("id", learnerId);
   var sessionId = store("sid") || "";
-  var lang = store("lang") || "auto";
+  var lang = store("lang") || "ms";
   var used = +(store("used") || 0);
   var pending = {image: null, audio: null};
   var queue = []; try { queue = JSON.parse(store("queue") || "[]"); } catch (e) { queue = []; }
   var pack = null;
 
-  function uiLang() {
-    if (lang !== "auto") return lang;
-    var nav = (navigator.language || "en").toLowerCase().split("-")[0];
-    return T[nav] ? nav : (nav === "tl" ? "fil" : "en");
-  }
+  function uiLang() { return T[lang] ? lang : "ms"; }
   function t(key) { var row = T[uiLang()] || T.en; return row[KEYS.indexOf(key)] || T.en[KEYS.indexOf(key)]; }
 
   function meter(bytes) { used += bytes; store("used", String(Math.round(used))); $("meter").textContent = (used < 1048576 ? Math.round(used / 1024) + " KB" : (used / 1048576).toFixed(1) + " MB"); }
@@ -128,7 +117,6 @@ input[type=search]{width:100%;padding:10px;margin-bottom:8px}
     var els = document.querySelectorAll("[data-t]");
     for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute("data-t"));
     $("text").placeholder = t("placeholder");
-    $("find").placeholder = t("search");
     $("photoBtn").title = t("photo"); $("mic").title = t("voice"); $("mic").setAttribute("aria-label", t("voice"));
     paintNet();
   }
@@ -152,7 +140,7 @@ input[type=search]{width:100%;padding:10px;margin-bottom:8px}
   function speak(text) {
     var s = window.speechSynthesis; s.cancel();
     var u = new SpeechSynthesisUtterance(text);
-    var code = VOICE[lang !== "auto" ? lang : uiLang()] || "en-US";
+    var code = VOICE[uiLang()] || "ms-MY";
     u.lang = code; u.rate = 0.95;
     var voices = s.getVoices() || [];
     for (var i = 0; i < voices.length; i++) if (voices[i].lang && voices[i].lang.replace("_", "-").indexOf(code.split("-")[0]) === 0) { u.voice = voices[i]; break; }
@@ -263,76 +251,11 @@ input[type=search]{width:100%;padding:10px;margin-bottom:8px}
   $("text").oninput = function () { this.style.height = ""; this.style.height = Math.min(this.scrollHeight, 120) + "px"; };
   $("text").onkeydown = function (e) { if (e.key === "Enter" && !e.shiftKey && window.matchMedia("(pointer:fine)").matches) { e.preventDefault(); $("send").click(); } };
 
-  // ----- Offline lessons + glossary (cached by the service worker)
-  function loadPack() {
-    var l = lang === "auto" ? uiLang() : lang;
-    fetch("/api/pack?lang=" + encodeURIComponent(l)).then(function (r) {
-      var size = +(r.headers.get("content-length") || 0);
-      return r.json().then(function (j) { return [j, size]; });
-    }).then(function (res) {
-      pack = res[0];
-      var key = "packed." + l; if (!store(key) && res[1]) { meter(res[1]); store(key, "1"); }
-      paintLessons(); paintWords();
-    }).catch(function () {});
-  }
-
-  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
-
-  function paintLessons() {
-    var root = $("learn"); root.innerHTML = "";
-    pack.lessons.forEach(function (ls) {
-      var card = el("div", "card"), head = el("button"), body = el("div", "body");
-      head.type = "button"; head.appendChild(el("span", "", ls.title)); head.appendChild(el("span", "tag", ls.subject));
-      body.hidden = true;
-      head.onclick = function () { body.hidden = !body.hidden; };
-      body.appendChild(el("span", "", ls.key_idea));
-      if (ls.formula) { body.appendChild(el("span", "k", "Formula")); body.appendChild(el("span", "", ls.formula)); }
-      body.appendChild(el("span", "k", "Example")); body.appendChild(el("span", "", ls.worked_example + "\n" + ls.example));
-      body.appendChild(el("span", "k", "Common mistake")); body.appendChild(el("span", "", ls.common_mistake));
-      var words = ls.terms.map(function (p) { return p[1] ? p[1] + " (" + p[0] + ")" : p[0]; }).join(", ");
-      if (words) { body.appendChild(el("span", "k", "Key words")); body.appendChild(el("span", "", words)); }
-      ls.practice.forEach(function (p) {
-        var q = el("div", "q", p.q + "\n"), out = el("div", "");
-        [["hint", p.hint], ["answer", p.solution]].forEach(function (pair) {
-          var b = el("button", "", t(pair[0])); b.type = "button";
-          b.onclick = function () { out.textContent = pair[1]; };
-          q.appendChild(b);
-        });
-        q.appendChild(out); body.appendChild(q);
-      });
-      var ask = el("button", "say", t("explain")); ask.type = "button"; ask.style.marginTop = "10px";
-      ask.onclick = function () { tab("chat"); $("text").value = t("explain") + ": " + ls.title; $("text").focus(); };
-      body.appendChild(ask);
-      card.appendChild(head); card.appendChild(body); root.appendChild(card);
-    });
-  }
-
-  function paintWords() {
-    var f = ($("find").value || "").toLowerCase(), list = $("wordlist"); list.innerHTML = "";
-    pack.glossary.forEach(function (w) {
-      var hay = (w.en + " " + w.local + " " + w.definition).toLowerCase();
-      if (f && hay.indexOf(f) < 0) return;
-      var d = el("div", "word"); d.appendChild(el("b", "", w.local ? w.local + " " : w.en + " "));
-      if (w.local) d.appendChild(el("span", "tag", "(" + w.en + ") "));
-      d.appendChild(el("div", "", w.definition)); list.appendChild(d);
-    });
-  }
-  $("find").oninput = function () { if (pack) paintWords(); };
-
-  function tab(name) {
-    var bs = document.querySelectorAll("nav button");
-    for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-selected", bs[i].getAttribute("data-tab") === name ? "true" : "false");
-    ["chat", "learn", "words"].forEach(function (id) { $(id).hidden = id !== name; });
-    $("composer").hidden = name !== "chat";
-  }
-  var navs = document.querySelectorAll("nav button");
-  for (var i = 0; i < navs.length; i++) navs[i].onclick = function () { tab(this.getAttribute("data-tab")); };
-
   // ----- Settings
   var sel = $("lang");
   Object.keys(LANGS).forEach(function (k) { var o = document.createElement("option"); o.value = k; o.textContent = LANGS[k]; sel.appendChild(o); });
   sel.value = lang;
-  sel.onchange = function () { lang = this.value; store("lang", lang); paintUI(); loadPack(); };
+  sel.onchange = function () { lang = this.value; store("lang", lang); paintUI(); };
   $("saver").checked = store("saver") === "1" || !!(navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType || "")));
   $("saver").onchange = function () { store("saver", this.checked ? "1" : "0"); };
   $("newchat").onclick = function () { sessionId = ""; store("sid", ""); $("log").innerHTML = ""; bubble(t("welcome"), "bot"); };
@@ -341,8 +264,7 @@ input[type=search]{width:100%;padding:10px;margin-bottom:8px}
   window.addEventListener("offline", paintNet);
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(function () {});
 
-  paintUI(); meter(0); bubble(t("welcome"), "bot"); loadPack(); flush();
-  if (/^#(learn|words)$/.test(location.hash)) tab(location.hash.slice(1));  // deep links, e.g. from an SMS
+  paintUI(); meter(0); bubble(t("welcome"), "bot"); flush();
 })();
 </script>
 </body>

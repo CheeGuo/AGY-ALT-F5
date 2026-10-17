@@ -2,8 +2,8 @@
 Scripted demo: runs short learner conversations in several languages and channels,
 printing each tool call, token usage and latency. Needs GOOGLE_API_KEY in .env.
 
-Run:  py -m pelita.demo            (all scenarios)
-      py -m pelita.demo sms        (one scenario by name)
+Run:  py -m paham.demo            (all scenarios)
+      py -m paham.demo sms        (one scenario by name)
 """
 
 import asyncio
@@ -48,8 +48,8 @@ SCENARIOS = {
 
 async def run_scenario(name: str, scenario: dict) -> None:
     sessions = InMemorySessionService()
-    await sessions.create_session(app_name="pelita", user_id=name, session_id=name, state=scenario["state"])
-    runner = Runner(agent=root_agent, app_name="pelita", session_service=sessions)
+    await sessions.create_session(app_name="paham", user_id=name, session_id=name, state=scenario["state"])
+    runner = Runner(agent=root_agent, app_name="paham", session_service=sessions)
     print(f"\n{'=' * 72}\n{name.upper()}: {scenario['note']}\n{'=' * 72}")
 
     for text in scenario["turns"]:
@@ -63,7 +63,7 @@ async def run_scenario(name: str, scenario: dict) -> None:
                 if part.function_call:
                     print(f"  [tool] {part.function_call.name}({dict(part.function_call.args or {})})")
                 elif part.text and event.is_final_response():
-                    print(f"PELITA: {part.text.strip()}")
+                    print(f"PAHAM: {part.text.strip()}")
             if event.usage_metadata:
                 prompt_tokens += event.usage_metadata.prompt_token_count or 0
                 output_tokens += event.usage_metadata.candidates_token_count or 0

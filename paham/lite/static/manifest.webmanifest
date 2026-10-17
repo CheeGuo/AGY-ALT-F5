@@ -1,6 +1,6 @@
 {
-  "name": "Pelita STEM Tutor",
-  "short_name": "Pelita",
+  "name": "Paham STEM Tutor",
+  "short_name": "Paham",
   "description": "Maths, science and computing help in your language. Works on slow networks and offline.",
   "start_url": "/",
   "display": "standalone",

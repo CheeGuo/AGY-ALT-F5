@@ -1,5 +1,5 @@
 """
-Pelita: Localized & Inclusive STEM Learning Agent (Google ADK)
+Paham: Localized & Inclusive STEM Learning Agent (Google ADK)
 
 Architecture:
 - One Flash-Lite LlmAgent (cheapest multimodal tier: reads typed text, photos of
@@ -24,6 +24,7 @@ from google.adk.models.llm_response import LlmResponse
 from google.genai import types
 
 from .config import CONFIG
+from .notes import search_lesson_notes
 from .prompts import build_instruction
 from .tools import TUTOR_TOOLS, bandwidth_mode
 
@@ -33,7 +34,7 @@ HISTORY_TURNS = {"standard": 12, "data_saver": 6, "sms": 4}
 MEDIA_TURNS = 2
 
 
-def pelita_instruction(ctx: ReadonlyContext) -> str:
+def paham_instruction(ctx: ReadonlyContext) -> str:
     """Builds the system instruction from the learner profile on every turn."""
     return build_instruction(ctx.state)
 
@@ -118,14 +119,14 @@ def _generate_config() -> types.GenerateContentConfig:
 # Required ADK entrypoint
 root_agent = Agent(
     model=CONFIG.model_name,
-    name="pelita",
+    name="paham",
     description=(
         "Localized, multilingual STEM tutor for low-bandwidth learners: explains maths, science "
         "and computing in the student's language with local examples, reads homework photos and "
         "voice notes, and checks practice answers in code."
     ),
-    instruction=pelita_instruction,
-    tools=TUTOR_TOOLS,
+    instruction=paham_instruction,
+    tools=[search_lesson_notes, *TUTOR_TOOLS],
     generate_content_config=_generate_config(),
     before_model_callback=fit_request_to_bandwidth,
     after_model_callback=end_on_full_sentence,

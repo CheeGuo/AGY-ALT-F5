@@ -1,5 +1,5 @@
 """
-Deterministic tools for Pelita.
+Deterministic tools for Paham.
 
 Everything here is pure Python over small bundled JSON packs, so glossary lookups,
 lesson cards, answer checking and arithmetic cost zero model tokens, work offline,
@@ -142,7 +142,7 @@ def get_profile(state) -> dict:
         "language": state.get("user:language", ""),
         "grade_level": state.get("user:grade_level", ""),
         "country": state.get("user:country", ""),
-        "region": state.get("user:region", "global"),
+        "region": state.get("user:region", "southeast_asia"),  # Malaysian learners by default
         "data_saver": bool(state.get("user:data_saver", False)),
     }
 
@@ -303,7 +303,7 @@ def get_lesson_card(topic: str, tool_context: ToolContext) -> dict:
         return {"status": "not_found", "available": [t["id"] for t in list_topics()["topics"]]}
     lesson = load_lessons()[lesson_id]
     profile = get_profile(tool_context.state)
-    region = profile["region"] or "global"
+    region = profile["region"] or "southeast_asia"
     language = profile["language"]
     terms = load_glossary()["terms"]
     return {

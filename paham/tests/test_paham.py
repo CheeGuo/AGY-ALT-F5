@@ -1,24 +1,25 @@
 """
-Offline tests for Pelita's deterministic layer (no API key or network needed).
+Offline tests for Paham's deterministic layer (no API key or network needed).
 
-Run:  py -m unittest discover -s pelita/tests -t .
+Run:  py -m unittest discover -s paham/tests -t .
 """
 
 import os
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
 
-# Must be set before pelita.config is imported: keep test sessions out of the real database
+# Must be set before paham.config is imported: keep test sessions out of the real database
 _TMP = tempfile.TemporaryDirectory()
-os.environ["PELITA_SESSION_DB"] = os.path.join(_TMP.name, "test.db")
+os.environ["PAHAM_SESSION_DB"] = os.path.join(_TMP.name, "test.db")
 
 from google.genai import types  # noqa: E402
 
-from pelita import channels, tools  # noqa: E402
+from paham import channels, tools  # noqa: E402
 from google.adk.models.llm_response import LlmResponse  # noqa: E402
-from pelita.agent import end_on_full_sentence, trim_history  # noqa: E402
-from pelita.prompts import build_instruction  # noqa: E402
+from paham.agent import end_on_full_sentence, trim_history  # noqa: E402
+from paham.prompts import build_instruction  # noqa: E402
 
 
 class FakeToolContext:
@@ -167,8 +168,10 @@ class ProfileTests(unittest.TestCase):
     def test_instruction_reflects_profile_and_channel(self):
         text = build_instruction({"user:language": "ta", "channel": "sms"})
         self.assertIn("தமிழ்", text)
-        self.assertIn("SMS channel", text)
-        self.assertIn("latest message", build_instruction({}))
+        self.assertIn("Saluran SMS", text)
+        default = build_instruction({})
+        self.assertIn("Bahasa Malaysia secara lalai", default)
+        self.assertIn("ENJIN 2-FASA", default)
 
 
 class CalculatorTests(unittest.TestCase):
@@ -254,26 +257,31 @@ class SentenceEndTests(unittest.TestCase):
         self.assertIsNone(end_on_full_sentence(None, self.response("Done. Mostly", types.FinishReason.STOP)))
 
 
+class LessonNotesTests(unittest.TestCase):
+    def test_uploaded_notes_are_searched(self):
+        from paham import notes
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(notes, "LESSONS_DIR", Path(tmp)):
+            self.assertEqual(notes.search_lesson_notes("pecahan")["status"], "not_found")
+            (Path(tmp) / "pecahan.md").write_text(
+                "Pecahan setara: darab pengangka dan penyebut dengan nombor sama.\n\nKadar tindak balas naik bila suhu naik.",
+                encoding="utf-8")
+            hit = notes.search_lesson_notes("pecahan setara")
+            self.assertEqual(hit["status"], "found")
+            self.assertIn("Pecahan setara", hit["passages"][0]["text"])
+            self.assertIn("pecahan.md", build_instruction({}))  # instruction tells the model notes exist
+
+
 class LiteServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from fastapi.testclient import TestClient
-        from pelita.lite import server
+        from paham.lite import server
         cls.server = server
         cls.client = TestClient(server.app)
 
     @classmethod
     def tearDownClass(cls):
         cls.client.close()
-
-    def test_offline_pack(self):
-        res = self.client.get("/api/pack?lang=hi&region=India", headers={"Accept-Encoding": "gzip"})
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.headers.get("content-encoding"), "gzip")
-        body = res.json()
-        self.assertEqual(body["region"], "south_asia")
-        self.assertIn(["density", "घनत्व"], next(l for l in body["lessons"] if l["id"] == "density")["terms"])
-        self.assertLess(int(res.headers["content-length"]), 25_000)
 
     def test_app_shell_is_small(self):
         res = self.client.get("/")

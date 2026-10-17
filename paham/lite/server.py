@@ -1,15 +1,14 @@
 """
-Pelita Lite: a tiny HTTP front end for learners on slow networks and basic devices.
+Paham Lite: a tiny HTTP front end for learners on slow networks and basic devices.
 
 Routes
-  GET  /            Single-file web app (~25 KB, no frameworks/CDNs; works offline after first visit)
-  GET  /sw.js       Service worker: caches the app shell and the offline study pack
-  GET  /api/pack    Offline study pack: lesson cards + glossary in one language (~10 KB gzipped)
+  GET  /            Single-file chat app (no frameworks/CDNs; app shell works offline after first visit)
+  GET  /sw.js       Service worker: caches the app shell
   POST /api/chat    Multipart: text, optional photo, optional voice note -> plain-text reply
   POST /sms         SMS gateway webhook (Twilio-style From/Body form) -> TwiML reply
   GET  /healthz     Liveness probe
 
-Run:  py -m uvicorn pelita.lite.server:app --host 0.0.0.0 --port 8080
+Run:  py -m uvicorn paham.lite.server:app --host 0.0.0.0 --port 8080
 """
 
 import hashlib
@@ -30,23 +29,23 @@ from google.genai import types
 from ..agent import root_agent
 from ..channels import MORE_KEYWORDS, paginate_sms, to_plain_text
 from ..config import CONFIG
-from ..tools import load_glossary, load_lessons, normalize_language, region_for
+from ..tools import normalize_language, region_for
 
-logger = logging.getLogger("pelita.lite")
+logger = logging.getLogger("paham.lite")
 
-APP_NAME = "pelita"
+APP_NAME = "paham"
 STATIC_DIR = Path(__file__).parent / "static"
 ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
 AUDIO_TYPES = {"audio/webm", "audio/ogg", "audio/mp4", "audio/mpeg", "audio/wav", "audio/aac", "audio/x-m4a", "audio/flac"}
 # Phone numbers are never stored: SMS learners are keyed by an HMAC of their number
-SMS_ID_SECRET = os.getenv("PELITA_SMS_ID_SECRET", "change-me-in-production").encode()
+SMS_ID_SECRET = os.getenv("PAHAM_SMS_ID_SECRET", "change-me-in-production").encode()
 
 Path(CONFIG.session_db_path).parent.mkdir(parents=True, exist_ok=True)
 session_service = SqliteSessionService(CONFIG.session_db_path)
 runner = Runner(agent=root_agent, app_name=APP_NAME, session_service=session_service)
 
-app = FastAPI(title="Pelita Lite", docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title="Paham Lite", docs_url=None, redoc_url=None, openapi_url=None)
 app.add_middleware(GZipMiddleware, minimum_size=400)
 
 # Remaining pages of long SMS replies, served on "MORE" with zero model calls
@@ -124,45 +123,6 @@ def healthz() -> dict:
     return {"ok": True}
 
 
-@app.get("/api/pack")
-def offline_pack(lang: str = "", region: str = "global") -> JSONResponse:
-    """Everything a learner needs to keep studying with no connection, in one small download."""
-    language = normalize_language(lang)
-    region_key = region_for(region)
-    glossary = load_glossary()
-    terms = glossary["terms"]
-
-    def local(term: str) -> str:
-        return terms[term].get(language, "") if language and language != "en" else ""
-
-    lessons = [
-        {
-            "id": lesson["id"],
-            "subject": lesson["subject"],
-            "level": lesson["level"],
-            "title": lesson["title"],
-            "key_idea": lesson["key_idea"],
-            "formula": lesson.get("formula", ""),
-            "worked_example": lesson["worked_example"],
-            "common_mistake": lesson["misconception"],
-            "example": lesson["examples"].get(region_key, lesson["examples"]["global"]),
-            "terms": [[term, local(term)] for term in lesson.get("terms", [])],
-            "practice": [
-                {"q": p["question"], "hint": p["hint"], "solution": p["solution"]} for p in lesson["practice"]
-            ],
-        }
-        for lesson in load_lessons().values()
-    ]
-    words = [
-        {"en": key, "local": local(key), "subject": entry["subject"], "definition": entry["definition"]}
-        for key, entry in terms.items()
-    ]
-    return JSONResponse(
-        {"language": language or "en", "region": region_key, "lessons": lessons, "glossary": words},
-        headers={"Cache-Control": "public, max-age=86400"},
-    )
-
-
 @app.post("/api/chat")
 async def chat(
     learner_id: str = Form(...),
@@ -228,7 +188,7 @@ async def sms_webhook(From: str = Form(...), Body: str = Form("")) -> Response:
     if message.casefold() in MORE_KEYWORDS and _sms_pages.get(learner_id):
         return twiml(_sms_pages[learner_id].pop(0))
     if not message:
-        return twiml("Pelita: text me any maths, science or computer question, in any language.")
+        return twiml("Paham: text me any maths, science or computer question, in any language.")
 
     session_id = await ensure_session(learner_id, learner_id)
     try:
@@ -237,7 +197,7 @@ async def sms_webhook(From: str = Form(...), Body: str = Form("")) -> Response:
         )
     except Exception:
         logger.exception("Tutor call failed (SMS)")
-        return twiml("Pelita is busy right now. Please send your question again in a few minutes.")
+        return twiml("Paham is busy right now. Please send your question again in a few minutes.")
 
     pages = paginate_sms(reply or "...", CONFIG.sms_max_segments)
     if len(_sms_pages) > 10_000:  # In-memory demo store; use Redis/DB for a real deployment

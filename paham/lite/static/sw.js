@@ -1,6 +1,6 @@
-// Pelita service worker: the app shell and the offline study pack load from cache
+// Paham service worker: the app shell and the offline study pack load from cache
 // first (instant on 2G, works with no signal), then refresh in the background.
-var CACHE = "pelita-v1";
+var CACHE = "paham-v1";
 var SHELL = ["/", "/manifest.webmanifest", "/icon.svg"];
 
 self.addEventListener("install", function (e) {
