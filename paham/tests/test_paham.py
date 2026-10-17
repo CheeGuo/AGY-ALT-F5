@@ -168,10 +168,10 @@ class ProfileTests(unittest.TestCase):
     def test_instruction_reflects_profile_and_channel(self):
         text = build_instruction({"user:language": "ta", "channel": "sms"})
         self.assertIn("தமிழ்", text)
-        self.assertIn("Saluran SMS", text)
+        self.assertIn("SMS channel", text)
         default = build_instruction({})
-        self.assertIn("Bahasa Malaysia secara lalai", default)
-        self.assertIn("ENJIN 2-FASA", default)
+        self.assertIn("Bahasa Melayu Malaysia by default", default)
+        self.assertIn("Two-Phase Teaching Protocol", default)
 
 
 class CalculatorTests(unittest.TestCase):

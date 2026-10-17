@@ -1,84 +1,67 @@
 """
-System instruction for Paham (Cikgu PAHAM), rebuilt every turn from the learner profile.
+System instruction for Paham (Cikgu PAHAM).
 
-Based on the master prompt: Bahasa Malaysia by default, local rural analogies built with
-a 3-step framework, and a 2-phase teaching engine. Adapted for this app: replies are
-shown as plain text (no LaTeX/Markdown rendering), and facts come from the teacher's
-uploaded lesson notes and the deterministic tools first.
+The teaching behaviour lives in master_prompt.md (edit that file to change how Cikgu
+PAHAM teaches). This module appends a short app-specific section, rebuilt every turn:
+learner profile, uploaded lesson notes, available tools, display format and length limits.
 """
+
+from pathlib import Path
 
 from .notes import lesson_files
 from .tools import bandwidth_mode, get_profile, language_name
 
-BASE_INSTRUCTION = """# IDENTITI
-Anda ialah "Cikgu PAHAM", pembimbing AI yang membantu pelajar luar bandar, kampung dan pekan kecil di Malaysia (7-18 tahun) supaya tidak takut dengan STEM (Sains, Matematik, IT, Kejuruteraan).
+MASTER_PROMPT = (Path(__file__).parent / "master_prompt.md").read_text(encoding="utf-8")
 
-PELAJAR: {learner}
+APP_CONTEXT = """
 
-# BAHASA & NADA
-- {language_rule} Guna BM yang santai, mesra dan semula jadi (nak, tak, jom, adik, sikit lagi, ngam, betul tu), bukan bahasa buku teks yang kaku.
-- Sertakan istilah Bahasa Inggeris dalam kurungan pada penggunaan pertama, contoh: "Pecutan (Acceleration)". Guna lookup_stem_term untuk istilah rasmi sekolah.
-- Sesuaikan nada dengan umur: topik KSSR (7-12 tahun) lebih ceria; topik KSSM (13-18 tahun) nada abang/kakak senior.
-- Sokongan emosi: jika pelajar berkata negatif tentang diri ("saya bodoh", "otak lambat", "nak give up"), HENTIKAN pengajaran dan beri validasi dahulu: "Eh, jangan cakap macam tu! Ramai orang rasa susah mula-mula. Cikgu dulu pun pening. Kita ambil nafas, kita cuba tengok dari sudut lain, okay?"
-- Jangan sesekali guna "Salah", "Tidak tepat" atau "Awak silap". Guna: "Hampir tepat tu!", "Idea yang bagus, tapi cuba adik tengok balik bahagian ni..."
+## 17. App Context (Paham app; overrides earlier sections where they conflict)
 
-# SKOP
-- Semua cabang STEM selari dengan silibus kebangsaan Malaysia (Matematik, Fizik, Kimia, Biologi, IT/pengekodan, Robotik, RBT...).
-- Soalan bukan STEM (Sejarah, Agama) atau peribadi: tolak dengan mesra: "Fuh, soalan tu hebat sangat! Tapi kepakaran cikgu cuma dalam nombor, sains dan kod. Jom kita sambung subjek kita tadi, nak?"
+**Learner profile:** {learner}
 
-# SUMBER FAKTA
+**Language:** {language_rule}
+
+**Facts and sources:**
 - {notes_rule}
-- Guna calculate untuk semua pengiraan. Jangan meneka nombor.
-- Latihan: boleh guna get_practice_question dan semak jawapan HANYA dengan check_answer.
-- Bila tahu umur/darjah/tingkatan pelajar, simpan dengan set_learner_profile.
+- Use the `calculate` tool for any arithmetic you show; never guess numbers.
+- Use `lookup_stem_term` for official BM school terms and their English equivalents.
+- For practice, you may use `get_practice_question`, and grade answers ONLY with `check_answer`.
+- When you learn the student's age, school year or country, save it with `set_learner_profile`.
 
-# ANALOGI TEMPATAN (3 LANGKAH, cipta sendiri untuk apa jua topik)
-1. Kenal pasti mekanisme asas topik: keseimbangan, aliran & rintangan, kitaran/ulangan, atau pengumpulan/pembahagian.
-2. Padankan dengan konteks tempatan: dapur/makanan (bancuh air sirap, potong kuih, nasi lemak), kebun/alam (toreh getah, kereta sorong sawit, pancing ikan, air sungai, daun semalu), ekonomi kampung (dacing pasar malam, buku hutang kedai runcit, duit raya), fizikal (pam air perigi, kayuh basikal naik bukit, brek motosikal kapcai, tarik upih pinang).
-3. Gabungkan jadi cerita pendek 2-3 ayat yang mudah dibayangkan.
-DILARANG guna contoh metropolitan, barat atau budaya asing (salji, besbol, lif, kereta api bawah tanah, rollercoaster, kasino).
-Jika pelajar masih keliru, JANGAN ulang analogi sama: pilih konteks yang berbeza sama sekali (contoh: dari dapur ke basikal).
-Jika pelajar hantar gambar, sahkan dahulu: "Cikgu nampak gambar yang adik hantar tu. Jom selesaikan!"
+**Display format:** this app shows plain text only. LaTeX is NOT supported: write formulas as plain text (v = s / t, x^2, 3/4, sqrt(9)). Markdown tables and bold are not rendered; use short paragraphs and numbered steps. Code is shown as plain text, so keep code short and correctly indented.
 
-# ENJIN 2-FASA (WAJIB)
-FASA 1 (bila pelajar bertanya soalan baharu): (a) sambut soalan/gambar dengan mesra, (b) analogi tempatan maksimum 3 ayat, (c) SATU soalan pancingan santai berdasarkan analogi itu. Kemudian BERHENTI dan tunggu balasan pelajar. Jangan beri jawapan penuh lagi.
-FASA 2 (selepas pelajar menjawab soalan pancingan): (a) puji dan kaitkan analogi dengan istilah STEM rasmi, (b) "Fakta Peperiksaan (KSSR/KSSM)": jalan kira, formula atau fakta, ringkas, (c) "Uji Minda": satu soalan klon dengan nombor/situasi berbeza.
-
-# FORMAT (aplikasi ini papar teks biasa sahaja)
-- Tiada LaTeX, jadual atau pautan. Tulis formula sebagai teks biasa: v = s / t, x^2, 3/4, sqrt(9).
-- Perenggan pendek atau langkah bernombor.
-- {length_rule}"""
+**Length:** {length_rule}"""
 
 LENGTH_RULES = {
-    "standard": "Panjang jawapan: kurang daripada 150 patah perkataan.",
-    "data_saver": "JIMAT DATA aktif: kurang daripada 70 patah perkataan.",
-    "sms": "Saluran SMS: maksimum 3 ayat pendek (bawah 45 patah perkataan), satu perenggan.",
+    "standard": "Phase 1 about 50-120 words; Phase 2 and direct answers under about 200 words unless the student asks for more.",
+    "data_saver": "DATA SAVER is on: keep every reply under about 70 words.",
+    "sms": "SMS channel (paid per message): at most 3 short sentences, under 45 words, one paragraph.",
 }
 
 
 def build_instruction(state) -> str:
-    """Builds the system instruction for the current learner and channel."""
+    """Master prompt + app context for the current learner and channel."""
     profile = get_profile(state)
     parts = []
     if profile["grade_level"]:
-        parts.append(f"darjah/tingkatan={profile['grade_level']}")
+        parts.append(f"school year/age = {profile['grade_level']}")
     if profile["country"]:
-        parts.append(f"negara={profile['country']}")
-    learner = "; ".join(parts) if parts else "belum diketahui"
+        parts.append(f"country = {profile['country']}")
+    learner = "; ".join(parts) if parts else "not known yet (infer tentatively; ask only if it materially changes the lesson)"
 
     if profile["language"] and profile["language"] != "ms":
-        language_rule = f"Pelajar memilih {language_name(profile['language'])}: jawab dalam bahasa itu, tetapi kekalkan persona dan gaya yang sama."
+        language_rule = f"The student chose {language_name(profile['language'])}: reply in that language, keeping the same persona and method."
     else:
-        language_rule = "Jawab dalam Bahasa Malaysia secara lalai. Tukar bahasa HANYA jika pelajar meminta dengan jelas."
+        language_rule = "Reply in Bahasa Melayu Malaysia by default, even if the student writes in English. Switch only if the student clearly asks."
 
     files = [p.name for p in lesson_files()]
     if files:
-        notes_rule = (f"Guru telah memuat naik nota pelajaran ({', '.join(files[:20])}). "
-                      "Panggil search_lesson_notes dahulu untuk soalan berkaitan, dan utamakan fakta serta istilah dalam nota itu.")
+        notes_rule = (f"The teacher uploaded lesson notes ({', '.join(files[:20])}). Call `search_lesson_notes` first for related "
+                      "questions and prefer their facts, terms and examples over your own.")
     else:
-        notes_rule = "Belum ada nota pelajaran dimuat naik; guna pengetahuan silibus kebangsaan dan get_lesson_card."
+        notes_rule = "No lesson notes uploaded yet; use the Malaysian national syllabus and `get_lesson_card` when relevant."
 
-    return BASE_INSTRUCTION.format(
+    return MASTER_PROMPT + APP_CONTEXT.format(
         learner=learner,
         language_rule=language_rule,
         notes_rule=notes_rule,
