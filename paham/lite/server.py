@@ -70,15 +70,22 @@ async def ensure_session(user_id: str, session_id: str) -> str:
 async def ask_tutor(user_id: str, session_id: str, parts: list[types.Part], state_delta: dict) -> str:
     """Runs one learner turn through the ADK agent and returns the plain-text reply."""
     reply = []
+    error = None
     async for event in runner.run_async(
         user_id=user_id,
         session_id=session_id,
         new_message=types.Content(role="user", parts=parts),
         state_delta=state_delta,
     ):
+        if event.error_code:
+            error = f"{event.error_code}: {event.error_message}"
         if event.is_final_response() and event.content and event.content.parts:
             reply.extend(p.text for p in event.content.parts if p.text and not p.thought)
-    return to_plain_text("\n".join(reply))
+    text = to_plain_text("\n".join(reply))
+    if not text:
+        # e.g. Gemini still "503 high demand" after retries: report it instead of an empty reply
+        raise RuntimeError(error or "model returned no text")
+    return text
 
 
 async def read_upload(upload: UploadFile | None, allowed: set[str], max_bytes: int, kind: str) -> types.Part | None:
@@ -197,7 +204,7 @@ async def sms_webhook(From: str = Form(...), Body: str = Form("")) -> Response:
         )
     except Exception:
         logger.exception("Tutor call failed (SMS)")
-        return twiml("Paham is busy right now. Please send your question again in a few minutes.")
+        return twiml("Cikgu PAHAM sibuk sekejap. Sila hantar soalan adik sekali lagi dalam beberapa minit.")
 
     pages = paginate_sms(reply or "...", CONFIG.sms_max_segments)
     if len(_sms_pages) > 10_000:  # In-memory demo store; use Redis/DB for a real deployment

@@ -20,6 +20,7 @@ from google.adk.agents.callback_context import CallbackContext
 from google.adk.agents.llm_agent import Agent
 from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.models.llm_request import LlmRequest
+from google.adk.models.google_llm import Gemini
 from google.adk.models.llm_response import LlmResponse
 from google.genai import types
 
@@ -118,7 +119,13 @@ def _generate_config() -> types.GenerateContentConfig:
 
 # Required ADK entrypoint
 root_agent = Agent(
-    model=CONFIG.model_name,
+    # Retry when Gemini is busy (503 "high demand", 429 rate limit) instead of failing the student
+    model=Gemini(
+        model=CONFIG.model_name,
+        retry_options=types.HttpRetryOptions(
+            attempts=4, initial_delay=1.5, max_delay=10, http_status_codes=[429, 500, 503, 504]
+        ),
+    ),
     name="paham",
     description=(
         "Localized, multilingual STEM tutor for low-bandwidth learners: explains maths, science "
